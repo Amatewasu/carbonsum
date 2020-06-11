@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CarbonSum</string>
+    <string name="title_activity_main">CarbonSum</string>
+    <string name="package_name">me.delrieu.carbonsum</string>
+    <string name="custom_url_scheme">me.delrieu.carbonsum</string>
+</resources>

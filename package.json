@@ -23,6 +23,7 @@
     "@angular/router": "~9.1.9",
     "@capacitor/android": "^2.1.1",
     "@capacitor/core": "2.1.0",
+    "@capacitor/ios": "^2.1.0",
     "@ionic-native/core": "^5.26.0",
     "@ionic-native/in-app-browser": "^5.26.0",
     "@ionic-native/ionic-webview": "^5.26.0",

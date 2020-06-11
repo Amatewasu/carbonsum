@@ -1,5 +1,8 @@
 {
   "name": "carbonsum",
-  "integrations": {},
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
   "type": "angular"
 }

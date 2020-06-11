@@ -14,7 +14,12 @@ const routes: Routes = [
   {
     path: 'list',
     loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
-  }
+  },
+  { path: 'display-report', loadChildren: './display-report/display-report.module#DisplayReportPageModule' },
+  { path: 'infos', loadChildren: './infos/infos.module#InfosPageModule' },
+  { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
+  { path: 'intro', loadChildren: './intro/intro.module#IntroPageModule' },
+  { path: 'timeline', loadChildren: './timeline/timeline.module#TimelinePageModule' }
 ];
 
 @NgModule({

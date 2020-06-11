@@ -1,6 +1,6 @@
 <ion-app>
-  <ion-split-pane>
-    <ion-menu type="overlay">
+  <ion-split-pane contentId="main">
+    <ion-menu type="overlay" contentId="main">
       <ion-header>
         <ion-toolbar>
           <ion-title>Menu</ion-title>
@@ -16,9 +16,22 @@
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-item-divider>
+            <ion-label>
+              Rapports mensuels
+            </ion-label>
+          </ion-item-divider>
+          <ion-menu-toggle auto-hide="false" *ngFor="let m of syncedMonths">
+            <ion-item [routerDirection]="'root'" routerLink="/display-report/{{m}}">
+              <ion-icon slot="start" name="calendar"></ion-icon>
+              <ion-label>
+                {{monthsName[m.split("/")[1]]}} {{m.split("/")[0]}}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
         </ion-list>
       </ion-content>
     </ion-menu>
-    <ion-router-outlet main></ion-router-outlet>
+    <ion-router-outlet id="main"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>

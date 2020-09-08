@@ -14,7 +14,11 @@ def capacitor_pods
   # Do not delete
 end
 
+<<<<<<< HEAD
 target 'CarbonSum' do
+=======
+target 'App' do
+>>>>>>> 15f61b76dfcbc52a39d1c577d7353fc988f643c8
   capacitor_pods
   # Add your Pods here
 end

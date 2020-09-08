@@ -2,7 +2,11 @@
 <Workspace
    version = "1.0">
    <FileRef
+<<<<<<< HEAD
       location = "group:/Users/user924783/carbonsum/ios/App/CarbonSum.xcodeproj">
+=======
+      location = "group:App.xcodeproj">
+>>>>>>> 15f61b76dfcbc52a39d1c577d7353fc988f643c8
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

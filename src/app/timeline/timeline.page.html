@@ -29,7 +29,7 @@
     </ion-fab-button>
     
 
-    <ion-img [src]="move.mapURL" class="map-move"></ion-img>
+    <ion-img [src]="mapService.generateMapURL(move.coordinates)" class="map-move"></ion-img>
     <ion-card-header>
       <ion-card-subtitle>{{(move && move.begin) ? (displayDateSubtitleMove(move.begin)) : ''}}</ion-card-subtitle>
       <ion-card-title>

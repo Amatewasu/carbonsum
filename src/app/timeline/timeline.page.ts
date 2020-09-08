@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataManagerService } from '../data-manager.service';
 import { EcologyToolsService } from '../ecology-tools.service';
 
+import { MapService } from '../map.service';
+
 import * as moment from 'moment';
 import 'moment/min/locales';
 
@@ -26,7 +28,7 @@ export class TimelinePage implements OnInit {
   private currentMonth : number = new Date().getMonth();
   private currentYear : number = new Date().getFullYear();
 
-  constructor(private dataManager : DataManagerService, public Ecology : EcologyToolsService) {
+  constructor(private dataManager : DataManagerService, public Ecology : EcologyToolsService, private mapService: MapService) {
     
   }
 

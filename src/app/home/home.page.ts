@@ -401,7 +401,7 @@ export class HomePage {
 			}
 
 			if (o.coordinates && o.coordinates.length){
-				o.mapURL = this.mapService.generateMapURL(o.coordinates);
+				//o.mapURL = this.mapService.generateMapURL(o.coordinates);
 			}
 
 			var now = new Date();

@@ -80,8 +80,6 @@ export class MapService {
 
     const url = `https://api.mapbox.com/styles/v1/mapbox/light-v9/static/${urlencode(pathWithGradient)}/auto/${width}x${height}?access_token=${this.MAPBOX_TOKEN}`;
 
-    console.log(url);
-
     return url;
   }
 }

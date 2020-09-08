@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Home
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-card class="welcome-card">
+      <img src="/assets/header.png" alt="header" />
+      <ion-card-header>
+        <ion-card-subtitle>Connexion Google</ion-card-subtitle>
+        <ion-card-title>Bienvenue sur CarbonSum</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>CarbonSum se connecte aux données enregistrées par Google Maps pour générer un bilan carbone issu de vos déplacements. </p>
+        <p>
+          <ion-button expand="block" [attr.color]="logged ? 'success' : null" (click)="logInOrLogOut()">
+            <ion-icon slot="start" name="logo-google"></ion-icon>
+            {{logged ? "Connecté" : "Non connecté"}}
+          </ion-button>
+        </p>
+      </ion-card-content>
+    </ion-card>
+    <!--
+    <ion-list lines="none">
+      <ion-list-header>
+        <ion-label>{{logged}}</ion-label>
+      </ion-list-header>
+      <ion-item (click)="logInOrLogOut()">
+        <ion-icon slot="start" color="primary" name="logo-google"></ion-icon>
+        <ion-label id="connected-message">{{ logged ? "Connected" : "Not connected" }}</ion-label>
+      </ion-item>
+      <ion-item (click)="downloadData()">
+        <ion-icon slot="start" color="primary" name="cloud-download"></ion-icon>
+        <ion-label>Download data {{hello}} - {{logged}}</ion-label>
+      </ion-item>
+    </ion-list>
+  -->
+
+    <ion-button expand="block" size="large" [attr.color]="logged && homeReport.generated && !synchronising ? '' : 'light'" (click)="askSync()">
+      <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
+      {{!synchronising ? "Synchroniser" : "Arrêter"}}
+    </ion-button>
+
+    <ion-card class="smallreport-card" *ngIf="homeReport.generated">
+      <!--<img src="/assets/shapes.svg" alt="" />-->
+      <ion-card-header>
+        <ion-card-subtitle>Résumé d'hier</ion-card-subtitle>
+        <ion-card-title>Un aperçu de votre bilan carbone lié à vos déplacements</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        {{homeReport.sumC02.toFixed(1)}} kg équivalent CO2 émis le {{homeReport.date}}
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="smallreport-card" *ngIf="synchronising">
+      <!--<ion-progress-bar type="indeterminate"></ion-progress-bar>-->
+      <ion-card-content style="text-align: center; vertical-align: center;">
+        <ion-spinner slot="start" color="primary" style="padding-right: 50px;"></ion-spinner>
+        {{currentSyncDate}}
+      </ion-card-content>
+    </ion-card>
+</ion-content>

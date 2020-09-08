@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Paramètres</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p>
+    Pour fonctionner, CarbonSum télécharge vos données de Google Maps. Elle enregistre ensuite certaines de ces données sur votre téléphone portable. Ces données servent ensuite à la confection de vos rapports. Ces données ne sont jamais communiquées à un serveur distant.
+  </p>
+
+  <ion-button class="small-padding" (click)="deleteLocalData()">
+    Effacer les données téléchargées
+  </ion-button>
+
+  <hr>
+
+  <ion-button class="small-padding" [routerDirection]="'root'" [routerLink]="'/intro'">
+    Revoir l'introduction
+  </ion-button>
+</ion-content>

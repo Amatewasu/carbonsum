@@ -6,6 +6,8 @@ import { EcologyToolsService } from '../ecology-tools.service';
 import * as moment from 'moment';
 import 'moment/min/locales';
 
+import { ToastController } from '@ionic/angular';
+
 moment.locale('fr-FR');
 
 @Component({
@@ -20,26 +22,30 @@ export class TimelinePage implements OnInit {
   public data : any = {};
   private notCompleteMonth : boolean = false;
 
-  private year : number;
-  private month : number;
-  private day : number;
+  public year : number;
+  public month : number;
+  public day : number;
   private currentMonth : number = new Date().getMonth();
   private currentYear : number = new Date().getFullYear();
 
-  constructor(private dataManager : DataManagerService, public Ecology : EcologyToolsService) {
+  constructor(private dataManager : DataManagerService, public Ecology : EcologyToolsService, public toastController: ToastController) {
     
   }
 
   ngOnInit() {
     this.selectedDate.setDate(this.selectedDate.getDate()-1);
+    this.maxPickingDate.setDate(this.maxPickingDate.getDate()-1);
+  }
+
+  ionViewDidEnter(){
     this.loadMovesFromDate(this.selectedDate);
   }
 
   rightArrow(){
     this.selectedDate.setDate( this.selectedDate.getDate() + 1);
-
+    
     if (this.selectedDate > this.maxPickingDate){
-      this.selectedDate = this.maxPickingDate;
+      this.selectedDate = new Date(this.maxPickingDate.getTime());
     }
 
     this.data = [];
@@ -87,7 +93,7 @@ export class TimelinePage implements OnInit {
   }
 
   displayDateNoDataToday(){
-    return moment().format('dddd D MMMM YYYY');
+    return moment(this.selectedDate).format('dddd D MMMM YYYY');
   }
 
   updateSelectedTime(e : any){
@@ -120,16 +126,17 @@ export class TimelinePage implements OnInit {
     let value = el.value;
 
     move.carType = value;
+    move.submode = value;
     move.CO2 = this.Ecology.computeCO2move(move);
 
     this.dataManager.saveMove(move);
   }
 
-  updateNbPeopleCar(e : any, move : any){
+  updatenbPeople(e : any, move : any){
     let el = e.target;
     let value = parseFloat(el.value);
 
-    move.nbPeopleCar = value;
+    move.nbPeople = value;
     move.CO2 = this.Ecology.computeCO2move(move);
 
     this.dataManager.saveMove(move);
@@ -140,8 +147,10 @@ export class TimelinePage implements OnInit {
     let value = el.value;
 
     move.trainType = value;
+    move.submode = value;
     if (value == ""){
       delete move.trainType;
+      delete move.submode;
     }
     move.CO2 = this.Ecology.computeCO2move(move);
 
@@ -153,6 +162,33 @@ export class TimelinePage implements OnInit {
   }
   getAverageNumberOfPeopleInACar(move){
     return this.Ecology.CO2table.car.averageNumberOfPeopleInACar;
+  }
+
+
+  async deleteMovesOfToday(){
+    let isUserOk = confirm("Êtes-vous sûr de vouloir supprimer les données de ce jour ? (vous pourrez les synchroniser de nouveau");
+    if (isUserOk){
+      let year = this.year;
+      let month = this.month;
+      let day = this.day;
+
+      let mapsData = JSON.parse(localStorage.mapsData);
+      let yearData = (mapsData && mapsData[year.toString()]) ? mapsData[year.toString()] : [];
+      let monthData = (yearData && yearData[month.toString()]) ? yearData[month.toString()] : [];
+      let dayData = (monthData && monthData[day.toString()]) ? monthData[day.toString()] : '';
+
+      delete mapsData[year.toString()][month.toString()][day.toString()];
+
+      localStorage.mapsData = JSON.stringify(mapsData);
+
+      this.loadMovesFromDate(this.selectedDate);
+
+      const toast = await this.toastController.create({
+        message: 'Données du jour supprimées avec succès',
+        duration: 2000
+      });
+      toast.present();
+    }
   }
 }
 

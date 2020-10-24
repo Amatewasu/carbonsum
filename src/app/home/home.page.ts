@@ -11,6 +11,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { AppComponent } from '../app.component';
 
 import { MapService } from '../map.service';
+import { EcologyToolsService } from '../ecology-tools.service';
 
 // in geqC02/km
 const CO2table = {
@@ -95,7 +96,7 @@ export class HomePage {
   signInUrl : string = "https://accounts.google.com/signin/v2/identifier";
   kmlUrl : string = "https://www.google.fr/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i{year}!2i{month}!3i{day}!2m3!1i{year}!2i{month}!3i{day}";
 
-  constructor(private router: Router, private iab: InAppBrowser, private localNotifications: LocalNotifications, private iabDL: InAppBrowser, public platform: Platform, changeDetectorRef: ChangeDetectorRef, private mapService: MapService) {
+  constructor(private router: Router, private iab: InAppBrowser, private localNotifications: LocalNotifications, private iabDL: InAppBrowser, public platform: Platform, changeDetectorRef: ChangeDetectorRef, private mapService: MapService, private Ecology: EcologyToolsService) {
 	// let's check if the user saw the tutorial slides
 	if (!localStorage.introSeen){
 		this.router.navigateByUrl('/intro');
@@ -265,139 +266,32 @@ export class HomePage {
 		let placemark = placemarks[i];
 		this.addPlacemarkToPlacemarksList(placemark);
 		console.log("[PLACEMARK]", placemark);
-		var o : any = {};
-		switch (placemark.name){
-			case "On the subway":
-				var data = placemark.ExtendedData.Data;
-				o = {
-					distance: parseInt(data[2].value, 10)/1000, // km 
-					type: "subway",
-					CO2: 0,
-					coordinates: []
-				};
-				o.CO2 = o.distance*(CO2table.subway/1000); // ekgCO2
-				if (placemark.LineString && placemark.LineString.coordinates){
-					o.coordinates = placemark.LineString.coordinates;
-				}
-			break;
 
-			case "On a tram":
-					var data = placemark.ExtendedData.Data;
-					o = {
-						distance: parseInt(data[2].value, 10)/1000, // km 
-						type: "tramway",
-						CO2: 0,
-						coordinates: []
-					};
-					o.CO2 = o.distance*(CO2table.tramway/1000); // ekgCO2
-					if (placemark.LineString && placemark.LineString.coordinates){
-						o.coordinates = placemark.LineString.coordinates;
-					}
-			break;
-
-			case "On a bus":
-					var data = placemark.ExtendedData.Data;
-					o = {
-						distance: parseInt(data[2].value, 10)/1000, // km 
-						type: "bus",
-						CO2: 0,
-						coordinates: []
-					};
-					o.CO2 = o.distance*(CO2table.bus/1000); // ekgCO2
-					if (placemark.LineString && placemark.LineString.coordinates){
-						o.coordinates = placemark.LineString.coordinates;
-					}
-			break;
-
-			case "Driving":
-			case "In a taxi or rideshare":
-			case "Moving":
-				var data = placemark.ExtendedData.Data;
-				o = {
-					distance: parseInt(data[2].value, 10)/1000, // km
-					type: "car",
-					CO2: 0,
-					coordinates: []
-				};
-				o.CO2 = o.distance*(CO2table.car.average/1000)/CO2table.car.averageNumberOfPeopleInACar; // ekgCO2
-				if (placemark.LineString && placemark.LineString.coordinates){
-					o.coordinates = placemark.LineString.coordinates;
-				}
-			break;
-
-			case "Flying":
-				var data = placemark.ExtendedData.Data;
-				o = {
-					distance: parseInt(data[2].value, 10)/1000, // km
-					type: "plane",
-					CO2: 0,
-					coordinates: []
-				};
-				var CO2byKm = CO2table.plane.distanceToCO2(o.distance);
-				o.CO2 = o.distance*(CO2byKm/1000); // ekgCO2
-				if (placemark.LineString && placemark.LineString.coordinates){
-					o.coordinates = placemark.LineString.coordinates;
-				}
-			break;
-
-			case "On a train":
-					var data = placemark.ExtendedData.Data;
-					o = {
-						distance: parseInt(data[2].value, 10)/1000, // km 
-						type: "train",
-						CO2: 0,
-						coordinates: []
-					};
-					let typeTrain = o.distance < 100 ? "RER" : "TGV";
-					if (typeTrain == "TGV"){
-						o.CO2 = o.distance*(CO2table.train.TGV/1000); // ekgCO2
-					} else if (typeTrain == "RER"){
-						o.CO2 = o.distance*(CO2table.train.RER/1000); // ekgCO2
-					}
-					if (placemark.LineString && placemark.LineString.coordinates){
-						o.coordinates = placemark.LineString.coordinates;
-					}
-
-					console.log("On a train:", o);
-			break;
-
-			case "Motorcycling":
-				var data = placemark.ExtendedData.Data;
-				o = {
-					distance: parseInt(data[2].value, 10)/1000, // km
-					type: "moto",
-					CO2: 0,
-					coordinates: []
-				};
-				o.CO2 = o.distance*(CO2table.moto/1000); // ekgCO2
-				if (placemark.LineString && placemark.LineString.coordinates){
-					o.coordinates = placemark.LineString.coordinates;
-				}
-			break;
-
-			case "Cycling":
-			case "Walking":
-				let type = placemark.name == "Cycling" ? "bike" : "walk";
-				var data = placemark.ExtendedData.Data;
-				o = {
-					distance: parseInt(data[2].value, 10)/1000, // km
-					type: type,
-					CO2: 0,
-					coordinates: []
-				};
-				if (placemark.LineString && placemark.LineString.coordinates){
-					o.coordinates = placemark.LineString.coordinates;
-				}
-			break;
-
-			default:
-				o = { distance: 0, type: "unknown", CO2: 0, coordinates: [] };
+		var data = placemark.ExtendedData.Data;
+		var o : any = {
+			distance: parseInt(data[2].value, 10)/1000, // km 
+			type: this.Ecology.translateGMapsMode(placemark.name),
+			CO2: 0,
+			coordinates: []
+		};
+		if (o.type == "unknown"){
+			console.log(placemark.name, "classified as 'unknown'=> skipping the move");
+			continue;
 		}
-		if (o && o.CO2){
+		o.submode = this.Ecology.submodeExists(o.type) ? this.Ecology.getDefaultSubmode(o.type) : "";
+		o.nbPeople = this.Ecology.getDefaultNbOfPeople(o.type);
+		o.CO2move = this.Ecology.computeCO2(o.distance, o.mode, o.submode);
+		o.CO2 = o.CO2move / o.nbPeople;
+
+		if (placemark.LineString && placemark.LineString.coordinates){
+			o.coordinates = placemark.LineString.coordinates;
+		}
+
+		if (o){
 			o.begin = placemark && placemark.TimeSpan && placemark.TimeSpan.begin ? placemark.TimeSpan.begin : "";
 			o.end = placemark && placemark.TimeSpan && placemark.TimeSpan.end ? placemark.TimeSpan.end : "";
 			if (o.begin && o.end){
-				o.duration = (new Date(o.end)).getTime() - (new Date(o.begin)).getTime();
+				o.duration = ((new Date(o.end)).getTime() - (new Date(o.begin)).getTime())/1000;
 			}
 
 			if (o.coordinates && o.coordinates.length){
@@ -412,7 +306,6 @@ export class HomePage {
 					continue;
 				}
 			}
-
 
 			out.sumCO2 += o.CO2;
 			if (o.type == "plane") out.sumPlane += o.CO2;

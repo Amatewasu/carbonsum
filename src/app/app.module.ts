@@ -15,13 +15,16 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [
     StatusBar,

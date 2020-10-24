@@ -1,0 +1,25 @@
+.allow-overflow {
+    position: relative;
+}
+
+#nb-people {
+    text-align: right;
+}
+
+ion-item {
+    contain: unset;
+}
+ion-list {
+    contain: unset;
+}
+
+.text-center {
+    text-align: center;
+}
+
+#searchbar-location-from {
+    margin-bottom: 0;
+}
+#searchbar-location-to {
+    margin-top: 0;
+}

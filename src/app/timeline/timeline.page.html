@@ -6,7 +6,11 @@
 
     <ion-title>Mes trajets</ion-title>
 
-    
+    <ion-buttons slot="end">
+      <ion-button id="delete-move-day" (click)="deleteMovesOfToday()">
+        <ion-icon slot="icon-only" name="trash-bin"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -70,7 +74,7 @@
           <ion-label>
             Nombre de personnes
           </ion-label>
-          <ion-select value="{{move.nbPeopleCar || getAverageNumberOfPeopleInACar(move)}}" (ionChange)="updateNbPeopleCar($event, move)">
+          <ion-select value="{{move.nbPeople || getAverageNumberOfPeopleInACar(move)}}" (ionChange)="updatenbPeople($event, move)">
             <ion-select-option value="{{getAverageNumberOfPeopleInACar(move)}}">{{Ecology.CO2table.car.averageNumberOfPeopleInACar}}</ion-select-option>
             <ion-select-option value="1">1</ion-select-option>
             <ion-select-option value="2">2</ion-select-option>
@@ -118,11 +122,17 @@
         </ion-col>
         <ion-col class="text-center">
             <ion-icon name="time-outline"></ion-icon><br />
-            {{move.duration ? (move.duration/1000/60).toFixed(0) : '?'}}<br />min
+            {{move.duration ? (move.duration/60).toFixed(0) : '?'}}<br />min
         </ion-col>
       </ion-row>
     </ion-grid>
   </ion-card>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/add-move/{{year}}/{{month+1}}/{{day}}">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>
 
@@ -131,7 +141,7 @@
     
     <ion-item>
       <ion-icon name="chevron-back-outline" slot="start" (click)="leftArrow()"></ion-icon>
-      <ion-title>
+      <ion-title class="ion-text-center">
         <ion-datetime displayFormat="DD MM YYYY" [value]="selectedDate.toISOString()" [max]="maxPickingDate.toISOString()" (ionChange)="updateSelectedTime($event)"></ion-datetime>
       </ion-title>
       <ion-icon name="chevron-forward-outline" slot="end" (click)="rightArrow()"></ion-icon>

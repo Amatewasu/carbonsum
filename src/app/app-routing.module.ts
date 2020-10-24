@@ -19,7 +19,11 @@ const routes: Routes = [
   { path: 'infos', loadChildren: './infos/infos.module#InfosPageModule' },
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
   { path: 'intro', loadChildren: './intro/intro.module#IntroPageModule' },
-  { path: 'timeline', loadChildren: './timeline/timeline.module#TimelinePageModule' }
+  { path: 'timeline', loadChildren: './timeline/timeline.module#TimelinePageModule' },
+  {
+    path: 'add-move',
+    loadChildren: () => import('./add-move/add-move.module').then( m => m.AddMovePageModule)
+  }
 ];
 
 @NgModule({

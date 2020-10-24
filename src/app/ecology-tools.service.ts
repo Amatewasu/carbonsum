@@ -7,8 +7,8 @@ export class EcologyToolsService {
 
   // gCO2eq/km
   public CO2table = {
-    subway: 5.7, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
-    tramway: 6, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
+    subway: 2.5, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
+    tramway: 2.2, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
     bus: 154, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Routier2
     car: {
       city: 206, // source: https://www.ratp.fr/categorie-faq/5041?faqid=1616
@@ -24,34 +24,18 @@ export class EcologyToolsService {
     plane: { // http://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/190 ; ignore the number of passengers and take between 180 and 250
       distanceToCO2: function (km){
         if (km < 1000){
-          return 293;
-        } else if (km < 2000){
-          return 216;
-        } else if (km < 3000){
-          return 209;
-        } else if (km < 4000){
-          return 230;
-        } else if (km < 5000){
-          return 307;
-        } else if (km < 6000){
-          return 230;
-        } else if (km < 7000){
-          return 223;
-        } else if (km < 8000){
-          return 202;
-        } else if (km < 9000){
-          return 223;
-        } else if (km < 10000){
-          return 216;
+          return 258;
+        } else if (km < 3500){
+          return 187;
         } else {
-          return 216;
+          return 152;
         }
       }
     },
     train: {
-      TGV: 3.69, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
-      TER: 8.91, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
-      RER: 5.70 // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
+      TGV: 1.73, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
+      TER: 24.8, // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
+      RER: 4.10 // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
     },
     walk: 0.0,
     bike: 0.0
@@ -88,11 +72,11 @@ export class EcologyToolsService {
       if (move.carType){
         submode = move.carType;
       }
-      if (move.nbPeopleCar != undefined){
-        nbPeople = move.nbPeopleCar;
+      if (move.nbPeople != undefined){
+        nbPeople = move.nbPeople;
       }
-    } else if (move.type == "train" && move.trainType){
-      submode = move.trainType;
+    } else if (move.type == "train" && move.submode){
+      submode = move.submode;
     }
 
     console.log("nbPeople", nbPeople);
@@ -144,5 +128,60 @@ export class EcologyToolsService {
       console.warn('[getDefaultSubmode] mode:', mode, 'not found in the database');
       return '0';
     }
+  }
+
+  translateGMapsMode (gmapsMode : string){
+    switch (gmapsMode){
+      case "On the subway":
+        return "subway";
+      break;
+
+      case "On a tram":
+        return "tramway";
+      break;
+
+      case "On a bus":
+        return "bus";
+      break;
+
+      case "Driving":
+			case "In a taxi or rideshare":
+			case "Moving":
+        return "car";
+      break;
+
+      case "Flying":
+        return "plane";
+      break;
+
+      case "On a train":
+        return "train";
+      break;
+
+      case "Motorcycling":
+        return "moto";
+      break;
+
+      case "Cycling":
+        return "bike";
+      break;
+
+      case "Walking":
+      case "Running":
+        return "walk";
+      break;
+
+      default:
+        console.warn("[translateGMapsMode] Gmaps mode not catched:", gmapsMode);
+        return "unknown";
+    }
+  }
+
+  submodeExists(submode : string){
+    return submode == "car" || submode == "train";
+  }
+
+  getDefaultNbOfPeople(mode : string){
+    return (mode == "car" ? this.CO2table.car.averageNumberOfPeopleInACar : 1.0);
   }
 }

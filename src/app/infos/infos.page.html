@@ -3,6 +3,7 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+
     <ion-title>En apprendre plus</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -29,8 +30,9 @@
       </p>
       <p>
         Chaque mode de transport n'émet pas la même quantité de gaz à effet de serre. CarbonSum se base sur les chiffres proposés par l'ADEME, l'Agence de l'environnement et de la maîtrise de l'énergie (référence en France).
-
-        <a href="https://www.ademe.fr/"><img src="/assets/ADEME_logo.svg" alt="Logo ADEME" /></a>
+      </p>
+      <p style="margin: auto; text-align: center;">
+          <a href="https://www.ademe.fr/"><img src="/assets/ADEME_logo.svg" alt="Logo ADEME" /></a>
       </p>
       <p>
         Ces valeurs sont converties en équivalent CO2. Chaque gaz à effet de serre à un potentiel de réchauffement global (PRG) qui lui est propre. Cela est fonction de leur capacité à retenir les rayonnements solaires. Cela prend également en compte leur temps de vie dans l'atmosphère. Les données de PRG utilisées sont celles du 5e rapport du GIEC (2014, dernier en date).
@@ -38,7 +40,8 @@
       <p>
         Les valeurs utilisées dans CarbonSum sont présentées dans le tableau ci-dessous.
       </p>
-        <table>
+
+      <table>
           <caption>Données utilisées par CarbonSum pour générer ses rapports</caption>
           <thead>
             <tr>
@@ -48,93 +51,82 @@
           </thead>
           <tbody>
             <tr>
-              <td>Voiture</td>
-              <td>253</td>
+              <td>Voiture (moyenne)</td>
+              <td>{{ CO2table.car.averageCarAdeme }}</td>
+            </tr>
+            <tr>
+              <td>Voiture (moyenne essence)</td>
+              <td>{{ CO2table.car.averageCarPetrolAdeme }}</td>
+            </tr>
+            <tr>
+              <td>Voiture (moyenne diesel)</td>
+              <td>{{ CO2table.car.averageCarDieselAdeme }}</td>
+            </tr>
+            <tr>
+              <td>Voiture (compacte électrique)</td>
+              <td>{{ CO2table.car.compactElectric }}</td>
+            </tr>
+            <tr>
+              <td>Voiture (berline électrique)</td>
+              <td>{{ CO2table.car.sedanElectric }}</td>
             </tr>
             <tr>
               <td>TGV</td>
-              <td>3.69</td>
+              <td>{{ CO2table.train.TGV }}</td>
             </tr>
             <tr>
               <td>RER</td>
-              <td>5.70</td>
+              <td>{{ CO2table.train.RER }}</td>
             </tr>
             <tr>
               <td>Métro</td>
-              <td>5.7</td>
+              <td>{{ CO2table.subway }}</td>
             </tr>
             <tr>
               <td>Bus</td>
-              <td>154</td>
+              <td>{{ CO2table.bus }}</td>
             </tr>
             <tr>
               <td>Tramway</td>
-              <td>6</td>
+              <td>{{ CO2table.tramway }}</td>
             </tr>
             <tr>
               <td>Moto</td>
-              <td>204</td>
+              <td>{{ CO2table.moto }}</td>
             </tr>
           </tbody>
         </table>
       <p>
-        Il est à noter que les émissions liées aux déplacements en voiture sont divisées par 1,3. C'est en effet le nombre moyen de personne par véhicule d'après l'ADEME.
+        Il est à noter que les émissions liées aux déplacements en voiture sont par défaut divisées par {{ CO2table.averageNumberOfPeopleInACar }}. C'est en effet le nombre moyen de personne par véhicule d'après l'ADEME.
       </p>
+      <hr>
       <p>
-        Concernant, le transport aérien, les émissions au kilomètre sont modulées en fonction de la distance parcourue (les modèles d'avions, les phases de vols, etc. ne sont pas les mêmes). Des données existent en fonction du nombre de siège de l'appareil. Cependant, CarbonSum considère que l'avion compte entre 180 et 250 sièges (à améliorer ?). Les données utilisées sont présentées dans le tableau ci-dessous.
+        Concernant, le transport aérien, les émissions au kilomètre sont modulées en fonction de la distance (court, moyen, long courrier).
       </p>
       <table>
         <caption>Facteurs d'émission du transport aérien utilisés par CarbonSum</caption>
         <thead>
           <tr>
+            <th>Type</th>
             <th>Distance</th>
             <th>gCO2e/passager.km</th>
           </tr>
         </thead>
         <tbody>
           <tr>
+            <td>Court courrier</td>
             <td>0-1000 km</td>
-            <td>293</td>
+            <td>{{ CO2table.plane.distanceToCO2(500) }}</td>
           </tr>
           <tr>
-            <td>1000-2000 km</td>
-            <td>216</td>
+            <td>Moyen courrier</td>
+            <td>1000-3500 km</td>
+            <td>{{ CO2table.plane.distanceToCO2(2000) }}</td>
           </tr>
           <tr>
-            <td>2000-3000 km</td>
-            <td>209</td>
-          </tr>
-          <tr>
-            <td>3000-4000 km</td>
-            <td>230</td>
-          </tr>
-          <tr>
-            <td>4000-5000 km</td>
-            <td>307</td>
-          </tr>
-          <tr>
-            <td>5000-6000 km</td>
-            <td>230</td>
-          </tr>
-          <tr>
-            <td>6000-7000 km</td>
-            <td>223</td>
-          </tr>
-          <tr>
-            <td>7000-8000 km</td>
-            <td>202</td>
-          </tr>
-          <tr>
-            <td>8000-9000 km</td>
-            <td>223</td>
-          </tr>
-          <tr>
-            <td>9000-10000 km</td>
-            <td>216</td>
-          </tr>
-          <tr>
-            <td>>10000 km</td>
-            <td>216</td>
+            <td>Long courrier</td>
+            <td>>3500 km</td>
+            <td>{{ CO2table.plane.distanceToCO2(10000) }}</td>
           </tr>
         </tbody>
       </table>
@@ -168,14 +160,6 @@
       </p>
       <p>
         Vous pouvez également faire un don à des organismes qui compensent les émissions de gaz à effet de serre. CarbonSum vous proposera prochainement de la faire directement via l'application.
-      </p>
-    </ion-card-content>
-  </ion-card>
-  <ion-card>
-    <ion-card-content>
-      <h1>CarbonSum sera t-il disponible sur iPhone ?</h1>
-      <p>
-        Oui, il est prévu que CarbonSum soit prochainement disponible sur l'Apple Store.
       </p>
     </ion-card-content>
   </ion-card>

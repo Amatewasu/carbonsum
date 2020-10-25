@@ -93,8 +93,8 @@ export class MapService {
   generateMapURL(coordStr : string){
     let coords = this.gmapsCoordToArray(coordStr);
 
-    const startColor = '#FF512F';
-    const endColor = '#F09819';
+    const startColor = '#00E19B';
+    const endColor = '#00A9FA';
     const width = 500; // px
     const height = 400; // px
 
@@ -104,8 +104,8 @@ export class MapService {
 
     const firstCoord = coords[0];
     const lastCoord = coords[coords.length - 1];
-    const startMarker = `pin-s-a+${this.rgbToHexString(colorA)}(${firstCoord[0]},${firstCoord[1]})`;
-    const endMarker = `pin-s-b+${this.rgbToHexString(colorB)}(${lastCoord[0]},${lastCoord[1]})`;
+    const startMarker = `pin-s+${this.rgbToHexString(colorA)}(${firstCoord[0]},${firstCoord[1]})`;
+    const endMarker = `pin-s+${this.rgbToHexString(colorB)}(${lastCoord[0]},${lastCoord[1]})`;
 
     const pathWithGradient = this.makePathWithGradient(coords, spectrumColors) + ',' + startMarker + ',' + endMarker;
     

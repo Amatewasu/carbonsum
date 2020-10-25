@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "resources": "cordova-res ios && cordova-res android && node resources/resources.js"
+    "resources": "cordova-res && node resources/resources.js"
   },
   "private": true,
   "dependencies": {

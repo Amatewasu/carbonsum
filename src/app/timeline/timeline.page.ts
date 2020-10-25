@@ -166,7 +166,7 @@ export class TimelinePage implements OnInit {
 
 
   async deleteMovesOfToday(){
-    let isUserOk = confirm("Êtes-vous sûr de vouloir supprimer les données de ce jour ? (vous pourrez les synchroniser de nouveau");
+    let isUserOk = confirm("Êtes-vous sûr de vouloir supprimer les données de ce jour ? (vous pourrez les synchroniser de nouveau)");
     if (isUserOk){
       let year = this.year;
       let month = this.month;

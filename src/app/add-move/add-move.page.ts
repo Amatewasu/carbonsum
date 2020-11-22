@@ -256,6 +256,6 @@ export class AddMovePage implements OnInit {
 
     this.dataManager.saveMove(move);
 
-    this.router.navigateByUrl("/timeline");
+    this.router.navigateByUrl("/tabs/timeline");
   }
 }

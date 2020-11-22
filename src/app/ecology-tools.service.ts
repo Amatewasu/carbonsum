@@ -21,7 +21,7 @@ export class EcologyToolsService {
       averageNumberOfPeopleInACar: 1.4 // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Routier2
     },
     moto: 204, // source: http://bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Routier2 
-    plane: { // http://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/190 ; ignore the number of passengers and take between 180 and 250
+    plane: { // http://bilans-ges.ademe.fr/fr/basecarbone/donnees-consulter/liste-element/categorie/190
       distanceToCO2: function (km){
         if (km < 1000){
           return 258;
@@ -38,10 +38,36 @@ export class EcologyToolsService {
       RER: 4.10 // source: http://www.bilans-ges.ademe.fr/fr/accueil/documentation-gene/index/page/Ferroviaire2
     },
     walk: 0.0,
-    bike: 0.0
+    bike: 0.0,
+
+    stats: {
+      FR: {
+        totalPerYearPerPerson: 11190.9, // kgCO2eq
+        totalPerYearPerPersonTransport: 2669.61 // kgCO2eq, https://www.statistiques.developpement-durable.gouv.fr/chiffres-cles-du-climat-france-europe-et-monde-edition-2020-0
+      }
+    }
   };
 
-  constructor() { }
+  public thresholdMiddleObjective = 0.8; // 80%
+
+  // explanation for the following value
+  // relevant value for three reasons:
+  // 1) average nb of kilometers traveled by a french person: 20000 km/year, average transport-related emissions by a french person: 2700 kgCO2eq/year, the quotient: 0.135 kgCO2eq/km
+  // source: https://fr.forumviesmobiles.org/sites/default/files/editor/rapport_enquete_nationale_mobilite_modes_de_vie_2020_fvm.pdf
+  // 2) middle sized electric car: 0.103 kgCO2eq/km => medium emission factor
+  // 3) normal french car: 0.193 kgCO2eq/km, with two people : 0.1 kgCO2eq => from high to medium, incentive for share riding
+  public thresholdHighEmissionFactor = 0.135; // kgCO2eq
+  // explanation for the following value
+  // relevant for two reasons
+  // 1) two people in an electric vehicle => low emission factor, an average electric vehicle : 0.103 kgCO2eq/km / 2 = 0.0515 kgCO2eq/km
+  // 2) 2°C scenario, every person has a 2.1 TCO2eq/year, we keep 25% for the transport, we an average of 10000km traveled/year => 0.052 kgCO2eq/km
+  public thresholdMediumEmissionFactor = 0.052; // kgCO2eq
+
+  constructor() {
+    if (!localStorage.yearlyGoal){
+      localStorage.yearlyGoal = this.CO2table.stats.FR.totalPerYearPerPersonTransport;
+    }
+  }
 
   // distance : km, mode : mode of transportation (ex: "train"), submode: more precise mode of transportation (ex: "TGV")(optional)
   computeCO2(distance : number, mode : string, submode? : string){
@@ -82,6 +108,36 @@ export class EcologyToolsService {
     console.log("nbPeople", nbPeople);
 
     return this.computeCO2(move.distance, move.type, submode) / nbPeople;
+  }
+
+  getFactorEmissionMove(move){
+    let submode = "";
+    let nbPeople = 1.0;
+    if (move.type == "car"){
+      if (move.carType){
+        submode = move.carType;
+      }
+      if (move.nbPeople != undefined){
+        nbPeople = move.nbPeople;
+      }
+    } else if (move.type == "train" && move.submode){
+      submode = move.submode;
+    }
+
+    console.log("nbPeople", nbPeople);
+
+    return this.computeCO2(move.distance, move.type, submode) / nbPeople / move.distance;
+  }
+
+  getDistanceMove(move : any){
+    return move.distance;
+  }
+  getDistanceMoves(moves : any){
+    let d = 0.0;
+    for (let move of moves){
+      d += this.getDistanceMove(move);
+    }
+    return d;
   }
 
   computeCO2moves(moves : any){
@@ -183,5 +239,39 @@ export class EcologyToolsService {
 
   getDefaultNbOfPeople(mode : string){
     return (mode == "car" ? this.CO2table.car.averageNumberOfPeopleInACar : 1.0);
+  }
+
+  yearlyObjectiveToText(sumCO2, yearlyObjective){
+		if (sumCO2 > yearlyObjective){
+			return "bad";
+		} else if (sumCO2 > this.thresholdMiddleObjective*yearlyObjective){
+			return "middle";
+		} else {
+			return "good";
+		}
+  }
+  
+  rateMoves(moves){
+    let res = {
+      nb: moves.length,
+      good: 0,
+      medium: 0,
+      bad: 0
+    };
+
+    for (let move of moves){
+      let factorEmission = this.getFactorEmissionMove(move);
+      if (factorEmission > this.thresholdHighEmissionFactor){
+        res.good++;
+      } else if (factorEmission > this.thresholdMediumEmissionFactor){
+        res.medium++;
+      } else {
+        res.bad++;
+      }
+    }
+
+    console.log(moves, res);
+
+    return res;
   }
 }

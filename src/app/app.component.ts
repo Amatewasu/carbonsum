@@ -6,6 +6,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
+import { TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -41,12 +43,33 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private screenOrientation: ScreenOrientation
+    private screenOrientation: ScreenOrientation,
+    private translate: TranslateService
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
+    this.translate.addLangs(["fr", "en"]);
+    this.translate.setDefaultLang('fr');
+
+    if (localStorage.lang){
+      this.translate.use(localStorage.lang);
+    } else {
+      let browserLang = this.translate.getBrowserLang();
+      let availableLangs = this.translate.getLangs();
+
+      if (browserLang in availableLangs){
+        this.translate.use(browserLang);
+      } else {
+        this.translate.use(this.translate.getDefaultLang());
+      }
+    }
+
+    if (!localStorage.synchronizeUntil){
+      localStorage.synchronizeUntil = "2020-01-01";
+    }
+
     this.platform.ready().then(() => {
       if (this.platform.is('hybrid')){
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
@@ -54,6 +77,7 @@ export class AppComponent {
 
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.statusBar.show();
 
       this.getSyncedMonths();
 

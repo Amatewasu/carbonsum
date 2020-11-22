@@ -4,25 +4,24 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    loadChildren: () => import('./tabs/tabs.module').then( m => m.TabsPageModule)
+  },
+  {
+    path: 'intro',
+    loadChildren: () => import('./intro/intro.module').then(m => m.IntroPageModule)
   },
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+    redirectTo: '/tabs/home',
+    pathMatch: 'full'
   },
   {
-    path: 'list',
-    loadChildren: () => import('./list/list.module').then(m => m.ListPageModule)
+    path: 'infos',
+    loadChildren: () => import('./infos/infos.module').then(m => m.InfosPageModule)
   },
-  { path: 'display-report', loadChildren: './display-report/display-report.module#DisplayReportPageModule' },
-  { path: 'infos', loadChildren: './infos/infos.module#InfosPageModule' },
-  { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
-  { path: 'intro', loadChildren: './intro/intro.module#IntroPageModule' },
-  { path: 'timeline', loadChildren: './timeline/timeline.module#TimelinePageModule' },
   {
     path: 'add-move',
-    loadChildren: () => import('./add-move/add-move.module').then( m => m.AddMovePageModule)
+    loadChildren: () => import('./add-move/add-move.module').then(m => m.AddMovePageModule)
   }
 ];
 

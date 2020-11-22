@@ -1,35 +1,83 @@
-<ion-header>
-  <ion-toolbar translucent>
-    <ion-title>Bienvenue sur CarbonSum</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content fullscreen padding scroll-y="false">
+<ion-content padding scroll-y="false">
   <ion-slides pager="true">
 
     <ion-slide>
-      <img src="/assets/icon/carbonsum.png"/>
-      <h2>Bienvenue sur <b>CarbonSum</b></h2>
-      <p>Vous allez découvrir comment CarbonSum va vous permettre d'effectuer le <b>bilan carbone</b> de vos déplacements.</p>
+      <img src="/assets/icon/logo-carbonsum.svg" class="margin-top-logo" />
+      <h2 class="font-size-name">CarbonSum</h2>
+
+      <img src="/assets/images/foodDeliveryColour.svg" />
+      <p class="margin-top-paragraph">CarbonSum vous permet d’effectuer le bilan carbone de vos déplacements.</p>
+
+      <div class="center-max-width margin-top-button">
+        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">Continuer</ion-button>
+      </div>
     </ion-slide>
 
     <ion-slide>
-      <img src="/assets/icon/google-maps.svg"/>
-      <h2>CarbonSum utilise l'historique de position de Google Maps</h2>
-      <p>Inutile de devoir rentrer un à un vos déplacements. Nous nous occupons de les <b>synchroniser</b>.</p>
+      <img src="/assets/icon/logo-carbonsum.svg" class="margin-top-logo" />
+      <h2 class="font-size-name">CarbonSum</h2>
+
+      <img src="/assets/images/googleMapsIntroduction.png" />
+      <p>CarbonSum utilise l’historique de position de Google Maps pour retrouvez vos trajets et les synchroniser.</p>
+      <p>Il est cependant possible de renseigner manuellement ses trajets.</p>
+ 
+      <div class="center-max-width margin-top-button">
+        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">Continuer</ion-button>
+      </div>
     </ion-slide>
 
+    <!--
     <ion-slide>
       <img src="/assets/icon/help_google_maps_timeline.png"/>
       <h2>Activation de l'historique de position</h2>
       <p>Au cas où cela ne serait pas déjà fait. Il est aisé d'activer l'historique de position depuis l'application Google Maps de votre téléphone.</p>
     </ion-slide>
+    -->
 
+    <ion-slide>
+      <img src="/assets/icon/logo-carbonsum.svg" class="margin-top-logo" />
+      <h2 class="font-size-name">CarbonSum</h2>
+
+      <img src="/assets/images/hikerManColour.svg" />
+      <p class="margin-top-paragraph">Découvrez comment réduire votre impact carbone.</p>
+
+      <div class="center-max-width margin-top-button">
+        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">Continuer</ion-button>
+      </div>
+    </ion-slide>
+
+    <!--
     <ion-slide>
       <img src="/assets/icon/carbonsum2.png"/>
       <p>Parmis tous les scénarios climatiques qui nous sont proposés. Choississons le bon.</p>
       <ion-button fill="clear" [routerDirection]="'root'" [routerLink]="'/home'">Continuer <ion-icon slot="end" name="arrow-forward"></ion-icon></ion-button>
     </ion-slide>
+    -->
 
+    <ion-slide>
+      <img src="/assets/icon/logo-carbonsum.svg" class="margin-top-logo" />
+      <h2 class="font-size-name">CarbonSum</h2>
+
+     <p class="explanation-google-maps">CarbonSum utilise l’historique de position de Google Maps pour retrouvez vos trajets et les synchroniser.</p>
+
+     <div class="center-max-width">
+      <ion-button expand="block" color="light" class="connection-google" (click)="clickGoogleButton()">
+        <ion-icon src="/assets/images/google.svg"></ion-icon>
+        Se connecter avec Google
+      </ion-button>
+    </div>
+    <hr>
+      <p class="small-infos">
+        CarbonSum utilise l’historique de vos trajets Google Maps seulement pour calculer votre impact carbone, nous ne stockons pas ou utilisons vos données.
+      </p>
+      <p class="small-infos">
+        Vous pouvez à tout moment dissocier votre compte Google et aucune données ne sera enregistrées.
+      </p>
+
+      <div class="center-max-width">
+        <ion-button color="tertiary" href="/home" (click)="checkIntroSeen()">Ignorer</ion-button>
+      </div>
+    </ion-slide>
   </ion-slides>
 </ion-content>

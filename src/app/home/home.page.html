@@ -1,68 +1,124 @@
-<ion-header>
+<!--<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Home
+      Dashboard
     </ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header>-->
 
 <ion-content>
-    <ion-card class="welcome-card">
-      <img src="/assets/header.png" alt="header" />
-      <ion-card-header>
-        <ion-card-subtitle>Connexion Google</ion-card-subtitle>
-        <ion-card-title>Bienvenue sur CarbonSum</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p>CarbonSum se connecte aux données enregistrées par Google Maps pour générer un bilan carbone issu de vos déplacements. </p>
-        <p>
-          <ion-button expand="block" [attr.color]="logged ? 'success' : null" (click)="logInOrLogOut()">
-            <ion-icon slot="start" name="logo-google"></ion-icon>
-            {{logged ? "Connecté" : "Non connecté"}}
-          </ion-button>
-        </p>
-      </ion-card-content>
-    </ion-card>
-    <!--
-    <ion-list lines="none">
-      <ion-list-header>
-        <ion-label>{{logged}}</ion-label>
-      </ion-list-header>
-      <ion-item (click)="logInOrLogOut()">
-        <ion-icon slot="start" color="primary" name="logo-google"></ion-icon>
-        <ion-label id="connected-message">{{ logged ? "Connected" : "Not connected" }}</ion-label>
-      </ion-item>
-      <ion-item (click)="downloadData()">
-        <ion-icon slot="start" color="primary" name="cloud-download"></ion-icon>
-        <ion-label>Download data {{hello}} - {{logged}}</ion-label>
-      </ion-item>
-    </ion-list>
-  -->
+  
 
-    <ion-button expand="block" size="large" [attr.color]="logged && homeReport.generated && !synchronising ? '' : 'light'" (click)="askSync()">
-      <ion-icon slot="start" name="cloud-download-outline"></ion-icon>
-      {{!synchronising ? "Synchroniser" : "Arrêter"}}
-    </ion-button>
+  <h1 class="dashboard-title">
+    Dashboard
+    <span class="sync-button">
+      <ion-spinner (click)="askStopSync()" *ngIf="dataManager.syncing"></ion-spinner>
+      <ion-icon name="sync-outline" (click)="askSync()" *ngIf="dataManager.logged && !dataManager.syncing && !dataManager.synced"></ion-icon>
+      <ion-icon name="cloud-done-outline" *ngIf="dataManager.synced"></ion-icon>
+    </span>
+  </h1>
 
-    <ion-card class="smallreport-card" *ngIf="homeReport.generated">
-      <!--<img src="/assets/shapes.svg" alt="" />-->
-      <ion-card-header>
-        <ion-card-subtitle>Résumé d'hier</ion-card-subtitle>
-        <ion-card-title>Un aperçu de votre bilan carbone lié à vos déplacements</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        {{homeReport.sumC02.toFixed(1)}} kg équivalent CO2 émis le {{homeReport.date}}
-      </ion-card-content>
-    </ion-card>
+  
+  
 
-    <ion-card class="smallreport-card" *ngIf="synchronising">
-      <!--<ion-progress-bar type="indeterminate"></ion-progress-bar>-->
-      <ion-card-content style="text-align: center; vertical-align: center;">
-        <ion-spinner slot="start" color="primary" style="padding-right: 50px;"></ion-spinner>
-        {{currentSyncDate}}
-      </ion-card-content>
-    </ion-card>
+  <ion-card color="warning" *ngIf="!dataManager.logged && !googleLogInHidden">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="close-outline" class="close-card" (click)="hideGoogleLogIn()"></ion-icon>
+        Synchronisez votre compte Google
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Vous n'êtes actuellement pas connecté à votre google Google. En vous y connectant, vos trajets seront automatiquement comptabilisés.
+      </p>
+      <div class="center-max-width">
+        <ion-button expand="block" color="light" class="connection-google" (click)="clickGoogleButton()">
+          <ion-icon src="/assets/images/google.svg"></ion-icon>
+          Se connecter avec Google
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="report-home" routerLink="/display-report/{{currentYear}}/{{currentMonth}}">
+    <ion-card-header>
+      <ion-card-title>
+        {{ 'general.report' | translate }} {{ 'general.monthsName.'+ currentMonth | translate }} {{ currentYear }}
+        <ion-icon name="chevron-forward"></ion-icon>
+      </ion-card-title>
+    </ion-card-header>
+  
+    <ion-card-content class="co2-score-container">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <linearGradient id="linearColors" x1="0" y1="0" x2="1" y2="1">
+            <!-- good -->
+            <stop *ngIf="currentMonthObjectiveMood == 'good'" offset="0%" stop-color="rgb(0, 226, 154)"></stop>
+            <stop *ngIf="currentMonthObjectiveMood == 'good'" offset="100%" stop-color="rgb(0, 169, 250)"></stop>
+
+            <!-- middle: #F5B600 -> #72E300 -->
+            <stop *ngIf="currentMonthObjectiveMood == 'middle'" offset="0%" stop-color="#72E300"></stop>
+            <stop *ngIf="currentMonthObjectiveMood == 'middle'" offset="100%" stop-color="#F5B600"></stop>
+
+            <!-- bad : #F5B600 -> #E30000 -->
+            <stop *ngIf="currentMonthObjectiveMood == 'bad'" offset="0%" stop-color="#E30000"></stop>
+            <stop *ngIf="currentMonthObjectiveMood == 'bad'" offset="100%" stop-color="#F5B600"></stop>
+        </linearGradient>
+
+          <circle class="circle-report" cx="50" cy="50" r="45" stroke="url(#linearColors)" attr.stroke-dashoffset="{{ currentMonthReport ? (2*3.141592*45) * (1 - currentMonthReport.nbDaysSync/currentMonthReport.nbDays) : (2*3.141592*45) }}"  />
+          <circle class="circle-report-bg" cx="50" cy="50" r="45"  />
+          <!-- [stroke-dashoffset]='currentMonthReport ? (1-currentMonthReport.nbDaysSync/currentMonthReport.nbDays)*280 : 280' Math.PI * 50 * (360-angle) / 180.0-->
+        </svg>
+        <span class="text-score-CO2">
+          <span class="icon-leaf">
+            <ion-icon *ngIf="currentMonthObjectiveMood == 'good'" src="/assets/images/leaf-green_azure.svg"></ion-icon>
+            <ion-icon *ngIf="currentMonthObjectiveMood == 'middle'" src="/assets/images/leaf-green_yellow.svg"></ion-icon>
+            <ion-icon *ngIf="currentMonthObjectiveMood == 'bad'" src="/assets/images/leaf-red.svg"></ion-icon>
+          </span>
+          <br />
+          <span class="score-CO2-result">{{ 'general.reportStatus.'+ currentMonthObjectiveMood | translate }}</span>
+          <br />
+          <span class="score-CO2-number" *ngIf="currentMonthReport">{{ (currentMonthReport.sumCO2).toFixed(1) }} kgCO2e</span>
+        </span>
+    </ion-card-content>
+
+    <ion-card-content>
+      <p class="fact-co2-score">
+        {{ 'home.reportStatusDescription.'+ currentMonthObjectiveMood | translate }}
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        Jour par jour
+      </ion-card-title>
+      <ion-card-subtitle>
+        28 sept - 4 oct
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Ici un rapport des derniers jours
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card routerLink="/infos">
+    <ion-card-header>
+      <ion-card-title>
+        En savoir plus
+        <!--<ion-icon name="chevron-forward"></ion-icon>-->
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        Comment CarbonSum génère vos rapports ?
+      </p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

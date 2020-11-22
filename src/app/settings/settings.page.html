@@ -1,24 +1,81 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Paramètres</ion-title>
+    <ion-title>{{ 'settings.TITTLE' | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <p>
-    Pour fonctionner, CarbonSum télécharge vos données de Google Maps. Elle enregistre ensuite certaines de ces données sur votre téléphone portable. Ces données servent ensuite à la confection de vos rapports. Ces données ne sont jamais communiquées à un serveur distant.
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ 'settings.LANGUAGE' | translate }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-select [(ngModel)]="language" (ionChange)='languageChange()' [value]='language'>
+        <ion-select-option value='fr'>Français</ion-select-option>
+        <ion-select-option value='en'>English</ion-select-option>
+      </ion-select>
+    </ion-card-content>
+  </ion-card>
+
+  <p class="social-icons" style="text-align: center;">
+    <a href="https://www.instagram.com/carbonsum/" target="_blank">
+      <ion-icon size="large" name="logo-instagram"></ion-icon>
+    </a>
   </p>
 
-  <ion-button class="small-padding" (click)="deleteLocalData()">
-    Effacer les données téléchargées
-  </ion-button>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ 'settings.SETTINGS' | translate }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">{{ 'settings.synchronizeUntil' | translate }}</ion-label>
+          <ion-datetime displayFormat="YYYY-MM-DD" min="2010-01-01" [max]="todayUSFormat" [value]="synchronizeUntil" (ionChange)="updateSynchronizeUntil($event)"></ion-datetime>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 
-  <hr>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ 'settings.INFOS' | translate }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>
+        {{ 'settings.howWeUseGmaps' | translate }}
+      </p>
+    </ion-card-content>
+  </ion-card>
 
-  <ion-button class="small-padding" [routerDirection]="'root'" [routerLink]="'/intro'">
-    Revoir l'introduction
-  </ion-button>
+  <ion-card color="warning" *ngIf="language == 'en'">
+    <ion-card-content>
+      <p>
+        We would like to acknowledge you that CarbonSum uses only French data for now. Depending of your location, it may not be 100% relevant. To make us implement your contry data, please send us an email.
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ 'settings.ADVANCED_SETTINGS' | translate }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button size="small" expand="block" class="small-padding" target="_blank" href="mailto:alexis@delrieu.me?subject=CarbonSum%20-%20Report%20a%20bug&body=Hi%20Alexis">
+        {{ 'settings.reportABug' | translate }}
+      </ion-button>
+
+      <hr>
+
+      <ion-button size="small" expand="block" class="small-padding" (click)="deleteLocalData()">
+        {{ 'settings.deleteDownloadedData' | translate }}
+      </ion-button>
+
+      <hr>
+
+      <ion-button size="small" expand="block" class="small-padding" [routerDirection]="'root'" [routerLink]="'/intro'">
+        {{ 'settings.seeAgainPresentation' | translate }}
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

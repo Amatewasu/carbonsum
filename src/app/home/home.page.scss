@@ -2,3 +2,42 @@
   max-height: 35vh;
   overflow: hidden;
 }
+
+h1 {
+  //font-size: 34pt;
+}
+.dashboard-title {
+  margin: 20pt;
+}
+
+
+
+ion-card-title {
+  font-size: 15pt;
+}
+ion-card-subtitle {
+  color: rgb(170, 170, 170);
+  text-transform: none;
+  text-align: right;
+  margin-top: -12pt;
+}
+
+.connection-google {
+  font-weight: bold;
+  font-family: 'SFProText';
+  margin-top: 20pt;
+  text-transform: none;
+}
+.connection-google ion-icon {
+  margin-right: 5pt;
+}
+
+.close-card {
+  position: absolute;
+  right: 0;
+}
+
+.sync-button {
+  position: absolute;
+  right: 20pt;
+}

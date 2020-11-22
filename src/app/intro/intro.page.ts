@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { DataManagerService } from '../data-manager.service';
 
 @Component({
   selector: 'app-intro',
@@ -7,10 +10,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IntroPage implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router, private dataManager: DataManagerService) { }
 
   ngOnInit() {
-    localStorage.introSeen = true;
+    this.dataManager.onLogIn.subscribe(() => {
+      console.log("onLogIn");
+      this.checkIntroSeen();
+    });
   }
 
+  ngOnDestroy(){
+    this.dataManager.onLogIn.unsubscribe();
+  }
+
+  slideNext(slides){
+    document.querySelector("ion-slides").slideNext();
+  }
+
+  checkIntroSeen(){
+    localStorage.introSeen = true;
+    this.router.navigateByUrl('/home');
+  }
 }

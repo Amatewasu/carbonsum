@@ -1,0 +1,52 @@
+{
+    "general": {
+        "monthsName": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        "report": "Report",
+        "reportStatus": {
+            "good": "Well done",
+            "middle": "Encouraging",
+            "bad": "Over"
+        },
+        "back": "Back",
+        "synchronising": "Synchronising",
+        "synchronisationComplete": "Synchronisation complete"
+    },
+
+    "home": {
+        "reportStatusDescription": {
+            "good": "You reached your objective. Congrats, continue like this or decrease the objective if it is too easy.",
+            "middle": "Congrats, you reached your objective. But the limit is quite close.",
+            "bad": "You are over your objective. Mind your actions during the next days and you will be good. You can also consider offsetting your carbon impact."
+        }
+    },
+
+    "menu": {
+        "dashboard": "Dashboard",
+        "timeline": "Timeline",
+        "settings": "Settings"
+    },
+
+    "settings": {
+        "TITTLE": "Settings",
+
+        "LANGUAGE": "Language",
+        "SETTINGS": "Settings",
+        "INFOS": "Informations",
+        "ADVANCED_SETTINGS": "Advanced settings",
+
+        "synchronizeUntil": "Synchronize until",
+        
+        "howWeUseGmaps": "CarbonSum downloads your Google Maps data. It saves some of this data on your phone. This data is then used to generate your reports. This data is never sent to a remote server.",
+        "deleteDownloadedData": "Delete the downloaded data",
+        "seeAgainPresentation": "See again the presentation",
+        "reportABug": "Report a bug or give feeback"
+    },
+
+    "display-report": {
+        "move": "move",
+        "moves": "moves",
+        "with-a-small-emission-factor": "with a light impact",
+        "with-a-medium-emission-factor": "with a medium impact",
+        "with-a-big-emission-factor": "with an important impact"
+    }
+}

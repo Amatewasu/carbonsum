@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 //import { InAppBrowser } from 'cordova-plugin-inappbrowser';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import { Platform } from '@ionic/angular';
 
@@ -12,6 +11,9 @@ import { AppComponent } from '../app.component';
 
 import { MapService } from '../map.service';
 import { EcologyToolsService } from '../ecology-tools.service';
+import { DataManagerService } from '../data-manager.service';
+
+import { Chart } from "chart.js";
 
 // in geqC02/km
 const CO2table = {
@@ -73,9 +75,9 @@ export class HomePage {
   intervalID;
 
   changeDetectorRef: ChangeDetectorRef;
-  synchronising : Boolean = false;
+  synchronising : boolean = false;
   currentSyncDate : String;
-  stopSync : Boolean = false;
+  stopSync : boolean = false;
 
   timeoutManagement = {
 	  timeoutThreshold: 15, // seconds
@@ -93,10 +95,19 @@ export class HomePage {
 	date: ""
   };
 
+  currentMonthReport;
+  currentMonth : number = new Date().getMonth();
+  currentYear : number = new Date().getFullYear();
+  currentMonthObjectiveMood : string = "good";
+
   signInUrl : string = "https://accounts.google.com/signin/v2/identifier";
   kmlUrl : string = "https://www.google.fr/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i{year}!2i{month}!3i{day}!2m3!1i{year}!2i{month}!3i{day}";
 
-  constructor(private router: Router, private iab: InAppBrowser, private localNotifications: LocalNotifications, private iabDL: InAppBrowser, public platform: Platform, changeDetectorRef: ChangeDetectorRef, private mapService: MapService, private Ecology: EcologyToolsService) {
+  googleLogInHidden : boolean = false;
+
+  
+
+  constructor(private router: Router, private iab: InAppBrowser, private iabDL: InAppBrowser, public platform: Platform, changeDetectorRef: ChangeDetectorRef, private mapService: MapService, private Ecology: EcologyToolsService, private dataManager: DataManagerService) {
 	// let's check if the user saw the tutorial slides
 	if (!localStorage.introSeen){
 		this.router.navigateByUrl('/intro');
@@ -108,55 +119,44 @@ export class HomePage {
 
 		this.testGoogleConnection();
 
-		setInterval(this.checkTimeout, 1000, this);
-	  });
+		//setInterval(this.checkTimeout, 1000, this);
+	});
   }
 
+  ionViewDidEnter(){
 
+	let today = new Date();
+	let startDateMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+	let endDateMonth = new Date(today.getFullYear(), today.getMonth()+1, 0)
+	this.currentMonthReport = this.dataManager.getReportBetween(startDateMonth, endDateMonth);
+	console.log(this.currentMonthReport);
+
+	this.computeCurrentMonthObjective();
+  }
+
+  ngOnInit(){
+	this.dataManager.onLogIn.subscribe(() => {
+		this.logged = true;
+	});
+  }
+  ngOnDestroy(){
+    this.dataManager.onLogIn.unsubscribe();
+  }
 
 
   testGoogleConnection(){
 	console.debug("testGoogleConnection");
-
-	var iabRef = this.iab.create(this.signInUrl, "_blank", "location=no,hidden=yes,hardwareback=no,hidenavigationbuttons=yes,zoom=no");
 
 	if (!this.platform.is('hybrid')){
 		console.log("BROWSER - ignoring testGoogleConnection");
 		return;
 	}
 
-    iabRef.on('loadstart').subscribe(event => {
-    	var url = new URL(event.url);
-    	if (url.hostname == "myaccount.google.com"){
-			this.logged = true;
-			console.log("logged", this.logged); 
-			iabRef.hide();
-
-			this.changeDetectorRef.detectChanges();
-			
-			var date = new Date();
-			date.setDate(date.getDate() - 1);
-
-			this.downloadData(date.getFullYear(), date.getMonth(), date.getDate(), this.displayYesterdayHome);
-    	}
-    });
-
-    this.iabRef = iabRef;
+	this.dataManager.testGoogleConnection();
   }
 
   logInOrLogOut(){
-  	if (this.logged && confirm("Etes-vous sûr de vouloir vous déconnecter ?")){ // we log out the user
-  		this.iabRef.hide(); 
-		this.iabRef.executeScript({ code: "window.location = 'https://www.google.com/accounts/Logout'" });
-  		this.logged = false;
-		console.log("logged", this.logged);  
-
-		this.changeDetectorRef.detectChanges();
-	  } else { // we display the login page to connect the user
-		console.log("[LOG IN] Display the sign in page.");
-		this.testGoogleConnection();
-		this.iabRef.show();
-  	}
+  	this.dataManager.logInOrLogOut();
   }
 
   checkTimeout (that){
@@ -172,54 +172,7 @@ export class HomePage {
   downloadData (year, month, day, cb){
 	console.log('downloadData');
 	
-
-	year = year || (new Date().getFullYear());
-	month = (month >= 0 && month <= 12) ? month : (new Date().getMonth());
-	if (day !== 0) day = day || (new Date().getDate());
-	
-	var urlDate = (this.kmlUrl).replace("{year}", year).replace("{month}", month).replace("{day}", day).replace("{year}", year).replace("{month}", month).replace("{day}", day);
-	console.log(urlDate);
-	var nb = 0;
-
-  	if (this.logged){
-		this.iabRef.hide();
-		this.iabDLRef = this.iab.create("https://www.google.fr/", "_blank", "EnableViewPortScale=yes,location=no,hidden=yes");
-		
-		this.timeoutManagement.dateStartDownload = new Date();
-		this.timeoutManagement.downloaded = false;
-		this.timeoutManagement.year = year;
-		this.timeoutManagement.month = month;
-		this.timeoutManagement.day = day;
-		this.timeoutManagement.cb = cb ? cb : function (foo){};
-
-  		this.iabDLRef.on('loadstop').subscribe(event => {
-			nb++;
-			if (nb > 1) return;
-
-			this.iabDLRef.on('message').subscribe((event) => {
-				// console.log('postmessage received', event);
-				this.timeoutManagement.downloaded = true;
-
-				if (localStorage.monitorPerformance) console.time("KML parsing");
-				
-				const parser = new DOMParser();
-				const srcDOM = parser.parseFromString(event.data.kml, "application/xml");
-				const json = xml2json(srcDOM);
-
-				if (localStorage.monitorPerformance) console.timeEnd("KML parsing");
-	
-				console.log(json);
-
-				if (cb){
-					cb(json, this);
-				}
-			});
-
-			this.iabDLRef.executeScript({ code:  "const req = new XMLHttpRequest(); req.open('GET', '"+ urlDate +"'); req.onload = function(){ var message = { kml: req.response }; webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify(message)); }; req.send(null);" });
-			
-			
-		  });
-  	}
+	this.dataManager.downloadGmapsData(year, month, day, cb);
   }
 
   displayYesterdayHome(json, that){
@@ -236,7 +189,7 @@ export class HomePage {
 
 	console.log("homeReport: ", that.homeReport);
 
-	that.changeDetectorRef.detectChanges();
+	//that.changeDetectorRef.detectChanges();
   }
 
   addPlacemarkToPlacemarksList (placemark){
@@ -252,209 +205,39 @@ export class HomePage {
   }
 
   processPlacemarks (placemarks, insertMoves : Boolean = true, datePlacemark : Date = new Date()){
-	var out = {
-		sumCO2: 0,
-		sumPlane: 0,
-		sumCar: 0,
-		sumDistance: 0,
-		moves: [],
-		usDate: "",
-		frDate: ""
-	};
-
-	for (let i = 0; i < placemarks.length; i++){ 
-		let placemark = placemarks[i];
-		this.addPlacemarkToPlacemarksList(placemark);
-		console.log("[PLACEMARK]", placemark);
-
-		var data = placemark.ExtendedData.Data;
-		var o : any = {
-			distance: parseInt(data[2].value, 10)/1000, // km 
-			type: this.Ecology.translateGMapsMode(placemark.name),
-			CO2: 0,
-			coordinates: []
-		};
-		if (o.type == "unknown"){
-			console.log(placemark.name, "classified as 'unknown'=> skipping the move");
-			continue;
-		}
-		o.submode = this.Ecology.submodeExists(o.type) ? this.Ecology.getDefaultSubmode(o.type) : "";
-		o.nbPeople = this.Ecology.getDefaultNbOfPeople(o.type);
-		o.CO2move = this.Ecology.computeCO2(o.distance, o.mode, o.submode);
-		o.CO2 = o.CO2move / o.nbPeople;
-
-		if (placemark.LineString && placemark.LineString.coordinates){
-			o.coordinates = placemark.LineString.coordinates;
-		}
-
-		if (o){
-			o.begin = placemark && placemark.TimeSpan && placemark.TimeSpan.begin ? placemark.TimeSpan.begin : "";
-			o.end = placemark && placemark.TimeSpan && placemark.TimeSpan.end ? placemark.TimeSpan.end : "";
-			if (o.begin && o.end){
-				o.duration = ((new Date(o.end)).getTime() - (new Date(o.begin)).getTime())/1000;
-			}
-
-			if (o.coordinates && o.coordinates.length){
-				o.mapURL = this.mapService.generateMapURL(o.coordinates);
-			}
-
-			var now = new Date();
-			if (datePlacemark.getFullYear() != now.getFullYear() && datePlacemark.getMonth() != now.getMonth() && datePlacemark.getDate() != now.getDate()){
-				var dateOfThisPlacemark = new Date(placemark.TimeSpan.begin);
-				if (dateOfThisPlacemark.getFullYear() != datePlacemark.getFullYear() || dateOfThisPlacemark.getMonth() != datePlacemark.getMonth() || dateOfThisPlacemark.getDay() != datePlacemark.getDay()){
-					console.log("[processPlacemarks] Placemark of another day detected. Ignored.", placemark, "Sync date: ", datePlacemark, "Placemark date: ", dateOfThisPlacemark);
-					continue;
-				}
-			}
-
-			out.sumCO2 += o.CO2;
-			if (o.type == "plane") out.sumPlane += o.CO2;
-			if (o.type == "car") out.sumCar += o.CO2;
-			out.sumDistance += o.distance;
-			if (insertMoves){
-				out.moves.push(o);
-			}
-		}
-	}
-
-	if (placemarks.length){
-		var date = new Date(placemarks[0].TimeSpan.end);
-		out.usDate = date.getFullYear() +"-"+ (date.getMonth() + 1) +"-"+ date.getDate();
-		out.frDate = date.getDate() +"/"+ (date.getMonth() + 1) +"/"+ date.getFullYear();
-	}
-
-	console.log("[processPlacemarks] placemarks: ", out);
-
-
-	return out;
+	return this.dataManager.processPlacemarks(placemarks, insertMoves, datePlacemark);
 	}
 
 	askSync (){
-		if (this.synchronising){
-			this.stopSync = true;
-			this.synchronising = false;
-			console.log("Stop sync triggered.");
-		} else {
-			localStorage.dateLastSync = new Date();
-			this.synchronise();
-		}
+		return this.dataManager.askSync();
 	}
 
-	synchronise (force : Boolean = false){
-		console.log("[synchronise]");
+	askStopSync(){
+		return this.dataManager.askStopSync();
+	}
 
-		if (!this.logged && !this.homeReport.generated){
-			console.error("Synchronisation aborted. Not logged or home report not generated yet.");
-			return;
-		}
+	synchronise (force : boolean = false){
+		return this.dataManager.synchronise(force);
+	}
 
-		if (this.stopSync){
-			console.log("Synchronisation stopped due to a stop sync event previsouly triggered.");
-			this.synchronising = false;
-			this.stopSync = false;
-			this.changeDetectorRef.detectChanges();
-			return;
-		}
+	clickGoogleButton(){
+		this.dataManager.logIn();
+	}
 
-		if (!force && this.synchronising){
-			console.error("The app is already synchronising the data.");
-			return;
-		}
-		if (!this.synchronising) this.synchronising = true;
-		
-		if (!localStorage.mapsData) localStorage.mapsData = "{}";
+	hideGoogleLogIn(){
+		this.googleLogInHidden = true;
+	}
 
-		var syncDate = new Date(localStorage.dateLastSync || new Date()); 
-		syncDate.setDate(syncDate.getDate() - 1);
+	computeCurrentMonthObjective(){
+		let yearlyObjective = parseFloat(localStorage.yearlyObjective) || this.Ecology.CO2table.stats.FR.totalPerYearPerPersonTransport;
+		let sumCO2currentMonth = this.currentMonthReport.sumCO2;
 
-		if (localStorage.monitorPerformance) console.time("Read JSON maps data");
-		var mapsData = localStorage.mapsData;
-		if (!mapsData) 													mapsData 												= {};
-		else 															mapsData 												= JSON.parse(mapsData);
+		let co2PerDayPeriod = sumCO2currentMonth/this.currentMonthReport.nbDaysSync;
+		let projectedYearlyCO2 = co2PerDayPeriod*365;
 
-		if (!mapsData[syncDate.getFullYear()]) 							mapsData[syncDate.getFullYear()] 						= {};
-		if (!mapsData[syncDate.getFullYear()][syncDate.getMonth()]) 	mapsData[syncDate.getFullYear()][syncDate.getMonth()] 	= {};
-		if (localStorage.monitorPerformance) console.timeEnd("Read JSON maps data");
+		this.currentMonthObjectiveMood = this.Ecology.yearlyObjectiveToText(projectedYearlyCO2, yearlyObjective);
 
-		var today = new Date();
-		if (!mapsData[today.getFullYear()] || !mapsData[today.getFullYear()][today.getMonth()] || !mapsData[today.getFullYear()][today.getMonth()][today.getDate()]){
-			syncDate = today;
-		}
-		if (mapsData[syncDate.getFullYear()] && mapsData[syncDate.getFullYear()][syncDate.getMonth()] && mapsData[syncDate.getFullYear()][syncDate.getMonth()][syncDate.getDate()]){
-			while (mapsData[syncDate.getFullYear()] && mapsData[syncDate.getFullYear()][syncDate.getMonth()] && mapsData[syncDate.getFullYear()][syncDate.getMonth()][syncDate.getDate()]){
-				console.log("syncDate", syncDate);
-				syncDate.setDate(syncDate.getDate() - 1);
-			}
-			syncDate.setDate(syncDate.getDate() + 1);
-			localStorage.dateLastSync = syncDate;
-			this.synchronise(true);
-			return;
-		}
-
-		var stopDate = new Date (2010, 0, 1);
-
-		this.currentSyncDate = syncDate.getDate() +"/"+ (syncDate.getMonth()+1) +"/"+ syncDate.getFullYear();
-		this.changeDetectorRef.detectChanges();
-
-		if (syncDate > stopDate){
-			var that = this;
-			this.downloadData(syncDate.getFullYear(), syncDate.getMonth(), syncDate.getDate(), function (json){
-				if (!json || !json.kml || !json.kml.Document){
-					console.log("[synchronise] Empty json. Function ignored.");
-					return;
-				}
-				if (!json.kml.Document.Placemark) json.kml.Document.Placemark = [];
-			
-				var report = that.processPlacemarks(json.kml.Document.Placemark, true, syncDate);
-
-				mapsData[syncDate.getFullYear()][syncDate.getMonth()][syncDate.getDate()] = report;
-
-				if (localStorage.monitorPerformance) console.time("Save JSON maps data");
-				localStorage.mapsData = JSON.stringify(mapsData);
-				if (localStorage.monitorPerformance) console.timeEnd("Save JSON maps data");
-				localStorage.dateLastSync = syncDate;
-
-				that.synchronise(true);
-			});
-		} else {
-			that.synchronising = false;
-			that.changeDetectorRef.detectChanges();
-		}
+		console.log("[computeCurrentMonthObjective] sumCO2currentMonth:", sumCO2currentMonth, "co2PerDayPeriod:", co2PerDayPeriod, "projectedYearlyCO2:", projectedYearlyCO2, "yearlyObjective:", yearlyObjective);
 	}
 }
-
-/**
- * This function coverts a DOM Tree into JavaScript Object. 
- * @param srcDOM: DOM Tree to be converted. 
- */
-function xml2json(srcDOM) {
-	let children = [...srcDOM.children];
-	
-	// base case for recursion. 
-	if (!children.length) {
-	  return srcDOM.innerHTML
-	}
-	
-	// initializing object to be returned. 
-	let jsonResult = {};
-	
-	for (let child of children) {
-	  
-	  // checking is child has siblings of same name. 
-	  let childIsArray = children.filter(eachChild => eachChild.nodeName === child.nodeName).length > 1;
-  
-	  // if child is array, save the values as array, else as strings. 
-	  if (childIsArray) {
-		if (jsonResult[child.nodeName] === undefined) {
-		  jsonResult[child.nodeName] = [xml2json(child)];
-		} else {
-		  jsonResult[child.nodeName].push(xml2json(child));
-		}
-	  } else {
-		jsonResult[child.nodeName] = xml2json(child);
-	  }
-	}
-	
-	return jsonResult;
-  }
   

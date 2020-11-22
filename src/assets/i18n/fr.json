@@ -1,0 +1,52 @@
+{
+    "general": {
+        "monthsName": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+        "report": "Bilan",
+        "reportStatus": {
+            "good": "Bien joué",
+            "middle": "Encourageant",
+            "bad": "Hors limite"
+        },
+        "back": "Retour",
+        "synchronising": "Synchronisation en cours",
+        "synchronisationComplete": "Synchronisation terminée"
+    },
+
+    "home": {
+        "reportStatusDescription": {
+            "good": "Vous respectez l'objectif que vous vous êtes fixé. Continuez comme ça, ou diminuez le si cela est trop simple.",
+            "middle": "Vous respectez l'objectif que vous vous êtes fixé. Continuez comme ça, mais attention la limite est proche !",
+            "bad": "Vous avez surpassé la limite que vous avez fixé. Faire attention les prochains jours pourraient vous remettre dans les clous. N'hésitez pas à compenser votre impact."
+        }
+    },
+
+    "menu": {
+        "dashboard": "Dashboard",
+        "timeline": "Mes trajets",
+        "settings": "Paramètres"
+    },
+
+    "settings": {
+        "TITTLE": "Paramètres",
+
+        "LANGUAGE": "Langue",
+        "SETTINGS": "Paramètres",
+        "INFOS": "Informations",
+        "ADVANCED_SETTINGS": "Paramètres avancés",
+
+        "synchronizeUntil": "Synchroniser jusqu'à",
+
+        "howWeUseGmaps": "Pour fonctionner, CarbonSum télécharge vos données de Google Maps. Elle enregistre ensuite certaines de ces données sur votre téléphone portable. Ces données servent ensuite à la confection de vos rapports. Ces données ne sont jamais communiquées à un serveur distant.",
+        "deleteDownloadedData": "Effacer les données téléchargées",
+        "seeAgainPresentation": "Revoir l'introduction",
+        "reportABug": "Signaler un problème ou faire un retour"
+    },
+
+    "display-report": {
+        "move": "déplacement",
+        "moves": "déplacements",
+        "with-a-small-emission-factor": "avec un impact léger",
+        "with-a-medium-emission-factor": "avec un impact moyen",
+        "with-a-big-emission-factor": "avec un impact important"
+    }
+}

@@ -1,7 +1,12 @@
-.swiper-slide {
-    display: block;
-  }
+ion-content {
+  --ion-background-color: white;
+}
 
+.swiper-slide {
+  display: block;
+}
+
+  /*
   ion-slide > h2 {
     margin-top: 2.8rem;
   }
@@ -15,3 +20,70 @@
   ion-slide {
       margin-bottom: 3rem;
   }
+  */
+
+.margin-top-logo {
+  margin-top: 34pt;
+}
+
+.font-size-name {
+  font-size: 24pt;
+  margin-top: 0.4rem;
+}
+
+p {
+  max-width: 80%;
+  margin: auto;
+  margin-top: 10pt;
+}
+
+ion-slides {
+  height: 100%;
+  --bullet-background-active: #00c1d4;
+}
+
+.center-max-width {
+  max-width: 80%;
+  margin: auto;
+  text-align: center;
+}
+.width-80-percents {
+  width: 80%;
+}
+.margin-top-button {
+  margin-top: 10pt;
+}
+
+@media (min-height: 700px) {
+  .margin-top-button {
+    margin-top: 60pt;
+  }
+  p.margin-top-paragraph {
+    margin-top: 50pt;
+  }
+}
+
+.connection-google {
+  font-weight: bold;
+  font-family: 'SFProText';
+  margin-top: 20pt;
+}
+.connection-google ion-icon {
+  margin-right: 5pt;
+}
+
+p.small-infos {
+  font-size: 10pt;
+  color: rgb(129, 129, 129);
+  line-height: 20pt;
+  letter-spacing: 0.25pt;
+  text-align: left;
+  font-weight: lighter;
+}
+
+p.explanation-google-maps {
+  font-weight: bold;
+  size: 17pt;
+  line-height: 22pt;
+  letter-spacing: 0.3pt;
+}

@@ -34,7 +34,7 @@ export class TimelinePage implements OnInit {
 
   ngOnInit() {
     this.selectedDate.setDate(this.selectedDate.getDate()-1);
-    this.maxPickingDate.setDate(this.maxPickingDate.getDate()-1);
+    this.maxPickingDate.setDate(this.maxPickingDate.getDate());
   }
 
   ionViewDidEnter(){

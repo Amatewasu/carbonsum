@@ -20,12 +20,12 @@
   --ion-color-secondary-tint: #24d6ea;
 
   /** tertiary **/
-  --ion-color-tertiary: #7044ff;
-  --ion-color-tertiary-rgb: 112, 68, 255;
+  --ion-color-tertiary: #00c1d4;
+  --ion-color-tertiary-rgb: 0, 193, 212;
   --ion-color-tertiary-contrast: #ffffff;
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-  --ion-color-tertiary-shade: #633ce0;
-  --ion-color-tertiary-tint: #7e57ff;
+  --ion-color-tertiary-shade: #00c1d4;
+  --ion-color-tertiary-tint: #00c1d4;
 
   /** success **/
   --ion-color-success: #10dc60;
@@ -74,4 +74,141 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  --bullet-background-active: #00c1d4;
+
+  --ion-background-color: rgb(244, 244, 244);
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/Inter-VariableFont_slnt,wght.ttf')
+}
+@font-face {
+  font-family: 'Inter-Bold';
+  src: url('/assets/fonts/Inter-Bold-slnt=0.ttf')
+}
+@font-face {
+  font-family: 'SFProText';
+  src: url('/assets/fonts/SFProText-Regular.ttf')
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter-Bold';
+}
+
+h2 {
+  letter-spacing: 0.59pt;
+}
+
+ion-card {
+  --background: white;
+}
+
+ion-toolbar {
+  --background: white;
+}
+
+ion-tab-bar {
+  --background: white;
+}
+
+.report-home ion-card-title {
+  font-size: 17pt;
+  text-align: center;
+}
+.report-home ion-card-title ion-icon {
+  vertical-align: middle;
+  margin-top: -3px;
+}
+
+circle.circle-report {
+  fill: white;
+  //stroke: #2f3d4c;
+  stroke-width: 7;
+  stroke-linecap: round;
+  transform-origin: 50% 50%;
+  stroke-dasharray: 283;
+  //stroke-dashoffset: 280;
+  transform: rotateZ(-90deg);
+  animation-play-state: running;
+  animation-delay: 2s;
+  animation: showAnimationCircleCO2 ease-in-out 3s;
+}
+circle.circle-report-bg {
+  position: absolute;
+  top:0;
+  fill:transparent;
+  stroke-width: 7;
+  stroke-linecap: round;
+  transform-origin: 50% 50%;
+  //stroke: rgba(128, 128, 128, .05);
+}
+.co2-score-container svg {
+  width: 70%;
+  margin: auto;
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.2));
+}
+
+.co2-score-container {
+  text-align: center;
+  padding: 0;
+}
+
+
+@keyframes showAnimationCircleCO2 {
+  from {
+    stroke-dashoffset: 283;
+  }
+}
+
+.text-score-CO2 {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 50%;  /* position the top  edge of the element at the middle of the parent */
+  left: 50%; /* position the left edge of the element at the middle of the parent */
+
+  transform: translate(-50%, -50%); /* This is a shorthand of
+                                         translateX(-50%) and translateY(-50%) */
+}
+
+p.fact-co2-score {
+  text-align: center;
+  font-size: 10pt;
+}
+
+.icon-leaf {
+  font-size: 25px;
+  margin: 0;
+}
+.score-CO2-result {
+  font-weight: bold;
+  font-size: 20pt;
+  margin: 0;
+}
+.score-CO2-number {
+  font-size: 12pt;
+  color: rgb(104, 104, 104);
+}
+.text-score-CO2 br {
+  line-height: 10pt;
+  margin: 0;
+}
+
+.position-relative {
+  position: relative;
+}
+
+ion-item {
+  --background: white;
+}
+ion-list {
+  --background: white;
+}
+ion-card-content {
+  --background: white;
+}
+.list-md {
+  --ion-item-background: white;
 }

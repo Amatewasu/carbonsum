@@ -1,9 +1,16 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="/" text="{{ 'general.back' | translate }}"></ion-back-button>
     </ion-buttons>
-    <ion-title>Rapport {{monthsName[month]}} {{year}}</ion-title>
+
+    <ion-title>{{ 'general.report' | translate }} {{ 'general.monthsName.'+ month | translate }} {{ year }}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button icon-only>
+        <ion-icon name="share-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -14,6 +21,72 @@
       <span *ngIf="month == currentMonth && year == currentYear">
         C'est normal dans la mesure où ce rapport reflète le mois courant, qui n'est pas encore finalisé.
       </span>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="co2-score-container position-relative">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <linearGradient id="linearColors-good" x1="0" y1="0" x2="1" y2="1">
+            <!-- good -->
+            <stop offset="0%" stop-color="rgb(0, 226, 154)"></stop>
+            <stop offset="100%" stop-color="rgb(0, 169, 250)"></stop>
+        </linearGradient>
+        <linearGradient id="linearColors-middle" x1="0" y1="0" x2="1" y2="1">
+          <!-- middle: #F5B600 -> #72E300 -->
+          <stop offset="0%" stop-color="#72E300"></stop>
+          <stop offset="100%" stop-color="#F5B600"></stop>
+      </linearGradient>
+      <linearGradient id="linearColors-bad" x1="0" y1="0" x2="1" y2="1">
+        <!-- bad : #F5B600 -> #E30000 -->
+        <stop offset="0%" stop-color="#E30000"></stop>
+        <stop offset="100%" stop-color="#F5B600"></stop>
+    </linearGradient>
+        
+
+          <circle class="circle-report" cx="50" cy="50" r="45" attr.stroke="url(#linearColors-{{ monthObjectiveMood }})" attr.stroke-dashoffset="{{ monthReport ? (2*3.141592*45) * (1 - monthReport.nbDaysSync/monthReport.nbDays) : (2*3.141592*45) }}"  />
+          <circle class="circle-report-bg" cx="50" cy="50" r="45"  />
+        </svg>
+        <span class="text-score-CO2">
+          <span class="icon-leaf">
+            <ion-icon *ngIf="monthObjectiveMood == 'good'" src="/assets/images/leaf-green_azure.svg"></ion-icon>
+            <ion-icon *ngIf="monthObjectiveMood == 'middle'" src="/assets/images/leaf-green_yellow.svg"></ion-icon>
+            <ion-icon *ngIf="monthObjectiveMood == 'bad'" src="/assets/images/leaf-red.svg"></ion-icon>
+          </span>
+          <br />
+          <span class="score-CO2-result">{{ 'general.reportStatus.'+ monthObjectiveMood | translate }}</span>
+          <br />
+          <span class="score-CO2-number" *ngIf="monthReport">{{ monthReport.sumCO2.toFixed(1) }} kgCO2e</span>
+        </span>
+  </div>
+
+  <ion-card class="rated-moves">
+    <ion-card-header>
+      <ion-card-title>{{ monthReport.movesData.nb }} {{ 'display-report.move'+ (monthReport.movesData.nb > 1 ? 's' : '') | translate }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-icon name="ellipse" slot="start" class="good"></ion-icon>
+          <ion-label>
+            <h2>{{ monthReport.movesData.good }}</h2>
+            {{ 'display-report.with-a-small-emission-factor' | translate }}
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="ellipse" slot="start" class="medium"></ion-icon>
+          <ion-label>
+            <h2>{{ monthReport.movesData.medium }}</h2>
+            {{ 'display-report.with-a-medium-emission-factor' | translate }}
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="ellipse" slot="start" class="bad"></ion-icon>
+          <ion-label>
+            <h2>{{ monthReport.movesData.bad }}</h2>
+            {{ 'display-report.with-a-big-emission-factor' | translate }}
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-card-content>
   </ion-card>
 

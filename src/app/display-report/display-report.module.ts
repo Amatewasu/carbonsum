@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { DisplayReportPage } from './display-report.page';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 const routes: Routes = [
   {
     path: ':yearID/:monthID',
@@ -19,7 +21,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    TranslateModule.forChild()
   ],
   declarations: [DisplayReportPage]
 })

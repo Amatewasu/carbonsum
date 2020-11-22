@@ -1,3 +1,27 @@
 ion-content {
     pointer-events: auto;
 }
+
+ion-icon.good {
+    color: #00E19B;
+}
+ion-icon.medium {
+    color: #FDB300;
+}
+ion-icon.bad {
+    color: #FF2502;
+}
+
+.rated-moves ion-card-header {
+    text-align: center;
+}
+.rated-moves ion-card-content, .rated-moves ion-list, .rated-moves ion-label, .rated-moves ion-item {
+    --background: white;
+}
+
+ion-item:last-child {
+    --border-width: 0 0 0 0 !important;
+}
+ion-item:last-child {
+    --inner-border-width: 0;
+}

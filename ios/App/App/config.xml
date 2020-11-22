@@ -23,6 +23,10 @@
     <param name="onload" value="true"/>
   </feature>
 
+  <feature name="LocalNotification">
+    <param name="ios-package" value="APPLocalNotification"/>
+  </feature>
+
   <feature name="CDVOrientation">
     <param name="ios-package" value="CDVOrientation"/>
   </feature>

@@ -9,7 +9,21 @@
         },
         "back": "Back",
         "synchronising": "Synchronising",
-        "synchronisationComplete": "Synchronisation complete"
+        "synchronisationComplete": "Synchronisation complete",
+
+        "by": "by",
+        "car": "Car",
+        "train": "Train",
+        "bus": "Bus",
+        "subway": "Subway",
+        "plane": "Plane",
+        "tramway": "Tramway",
+        "moto": "Motorcycle",
+        "bike": "Bike",
+        "walk": "Walk",
+        "byFoot": "Walk",
+
+        "gCO2e-passenger-km": "gCO2e/passenger.km"
     },
 
     "home": {
@@ -17,7 +31,14 @@
             "good": "You reached your objective. Congrats, continue like this or decrease the objective if it is too easy.",
             "middle": "Congrats, you reached your objective. But the limit is quite close.",
             "bad": "You are over your objective. Mind your actions during the next days and you will be good. You can also consider offsetting your carbon impact."
-        }
+        },
+
+        "knowMore": "Read more",
+        "knowMoreText1": "How CarbonSum generates your reports?",
+
+        "syncGoogleAccount": "Synchronize your Google account",
+        "currentlyNotConnected": "You are currently not connected with your Google account. Once connected, your trips will be automatically synchronized.",
+        "connectWithGoogle": "Connect with Google"
     },
 
     "menu": {
@@ -39,14 +60,88 @@
         "howWeUseGmaps": "CarbonSum downloads your Google Maps data. It saves some of this data on your phone. This data is then used to generate your reports. This data is never sent to a remote server.",
         "deleteDownloadedData": "Delete the downloaded data",
         "seeAgainPresentation": "See again the presentation",
-        "reportABug": "Report a bug or give feeback"
+        "reportABug": "Report a bug or give feeback",
+        "helpPage": "Help page",
+
+        "objective": "Objective",
+        "year": "year",
+        "explanationObjective": "Towards Paris Agreement which aim to limit global warming to 2°C (3.6 °F), we can only emit 2.1 metric tons of CO2e par year and per capita. Select a year and we will convert it in a objective in CO2e. We divide it by 4 because transportation is about 25% of the carbon footprint of a French person."
     },
 
     "display-report": {
-        "move": "move",
-        "moves": "moves",
+        "move": "trip",
+        "moves": "trips",
         "with-a-small-emission-factor": "with a light impact",
         "with-a-medium-emission-factor": "with a medium impact",
-        "with-a-big-emission-factor": "with an important impact"
+        "with-a-big-emission-factor": "with an important impact",
+
+        "social-sharing": {
+            "message": "I've easily computed my transport-related carbon footprint with CarbonSum.",
+            "lowImpact": "low impact",
+            "mediumImpact": "medium impact",
+            "highImpact": "high impact",
+            "kgCO2e": "kgCO2e"
+        },
+
+        "monthlyReport": "Monthly Report",
+        "monthNotFullySync": "This month has not been fully synchronized. Thereby, the report is incomplete.",
+        "butItsCurrentMonth": "It is normal because it is the current month report, which is not ended yet.",
+        "consequenceOfMove": "d'équivalent CO2 émis en conséquence de vos déplacements.",
+        "including": "including",
+        "relatedToYourMoves": "related to your trips by"
+    },
+
+    "add-move": {
+        "NEW_MOVE": "New trip",
+        "ADD": "Add",
+        "modeOfTransportation": "Mode of transportation",
+        "noRouteFound": "No route has been found.",
+        "from": "From",
+        "to": "To",
+
+        "person": "person",
+        "people": "people",
+
+        "distance": "Distance",
+        "impact": "Impact",
+        "duration": "Duration"
+    },
+
+    "timeline": {
+        "MY_MOVES": "My trips",
+        "NO_DATA": "No data",
+        "NO_DATA_EXPLANATION": "No data for this data. Did yo synchronize it?",
+        "move": "Trip",
+        "vehicle": "Vehicle",
+        "average": "French average",
+        "averagePetrol": "French petrol average",
+        "averageDiesel": "French diesel average",
+        "compactElectricVehicle": "French compact electric",
+        "sedanElectricVehicle": "French sedan electric",
+        "nbPeople": "Number of people",
+        "type": "Type",
+        "unspecified": "Unspecified",
+        "TGV": "TGV (French high-speed train)",
+        "RER": "RER (Paris area middle-speed train)",
+        "TER": "TER (French middle-speed train)",
+        "commentGoodForHealth": "Nothing's better for health!"
+    },
+
+    "help": {
+        "help": "Help",
+        "connectedButNoTrips": "I am connected with my Google account but I have no trips",
+        "connectedButNoTripsExplanation": "In order to save your trips, the <i>Timeline</i> feature needs to be enabled on your Google account. To do that, you need to open the Google Maps app and click on your <p>profile</b> (top right corner), then <b>Your data in Maps</b>, then <b>Location History</b>. It is important to enable it. It is also important to check that your device to checked in <b>Device linked with this account</b>. <br><br> <a href='https://support.google.com/maps/answer/6258979hl=en'>Help page Google Maps - Timeline</a>"
+    },
+
+    "intro": {
+        "carbonFootprintReport": "CarbonSum makes it easy to do your transport-related carbon footprint report.",
+        "continue": "Continue",
+        "csUsesGmaps": "CarbonSum uses the Google Maps history of position to get your trips.",
+        "possibleToManuallyAddTrips": "But you can manually add your trips if you prefer.",
+        "howToDecreaseCarbonImpact": "Disover how you can decrease your carbon impact.",
+        "connectWithGoogle": "Connect with Google",
+        "weDoNotUseYourData": "CarbonSum uses the Google Maps history of position only to compute your carbon footprint. We do not store your data on a server.",
+        "youCanStop": "You can unlink your Google account at anytime and no data will be stored.",
+        "ignore": "Ignore"
     }
 }

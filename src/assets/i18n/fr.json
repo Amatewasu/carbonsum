@@ -9,7 +9,21 @@
         },
         "back": "Retour",
         "synchronising": "Synchronisation en cours",
-        "synchronisationComplete": "Synchronisation terminée"
+        "synchronisationComplete": "Synchronisation terminée",
+
+        "by": "en",
+        "car": "Voiture",
+        "train": "Train",
+        "bus": "Bus",
+        "subway": "Métro",
+        "plane": "Avion",
+        "tramway": "Tramway",
+        "moto": "Moto",
+        "bike": "Vélo",
+        "walk": "marche",
+        "byFoot": "À pied",
+
+        "gCO2e-passenger-km": "gCO2e/passager.km"
     },
 
     "home": {
@@ -17,7 +31,14 @@
             "good": "Vous respectez l'objectif que vous vous êtes fixé. Continuez comme ça, ou diminuez le si cela est trop simple.",
             "middle": "Vous respectez l'objectif que vous vous êtes fixé. Continuez comme ça, mais attention la limite est proche !",
             "bad": "Vous avez surpassé la limite que vous avez fixé. Faire attention les prochains jours pourraient vous remettre dans les clous. N'hésitez pas à compenser votre impact."
-        }
+        },
+
+        "knowMore": "En savoir plus",
+        "knowMoreText1": "Comment CarbonSum génère vos rapports ?",
+
+        "syncGoogleAccount": "Synchronisez votre compte Google",
+        "currentlyNotConnected": "Vous n'êtes actuellement pas connecté à votre google Google. En vous y connectant, vos trajets seront automatiquement comptabilisés.",
+        "connectWithGoogle": "Se connecter avec Google"
     },
 
     "menu": {
@@ -39,7 +60,12 @@
         "howWeUseGmaps": "Pour fonctionner, CarbonSum télécharge vos données de Google Maps. Elle enregistre ensuite certaines de ces données sur votre téléphone portable. Ces données servent ensuite à la confection de vos rapports. Ces données ne sont jamais communiquées à un serveur distant.",
         "deleteDownloadedData": "Effacer les données téléchargées",
         "seeAgainPresentation": "Revoir l'introduction",
-        "reportABug": "Signaler un problème ou faire un retour"
+        "reportABug": "Signaler un problème ou faire un retour",
+        "helpPage": "Page d'aide",
+
+        "objective": "Objectif",
+        "year": "année",
+        "explanationObjective": "Afin de respecter l'accord de Paris qui vise à limiter le réchauffement climatique à 2°C. Nous ne pourrons produire plus que 2,1 tonnes de CO2e par an et par personne 2100. Choisissez une année et nous convertirons votre objectif en CO2e. Nous divisons par 4 ce chiffres étant donné que les transports représentent environ 25% de l'empreinte carbone d'un français."
     },
 
     "display-report": {
@@ -47,6 +73,125 @@
         "moves": "déplacements",
         "with-a-small-emission-factor": "avec un impact léger",
         "with-a-medium-emission-factor": "avec un impact moyen",
-        "with-a-big-emission-factor": "avec un impact important"
+        "with-a-big-emission-factor": "avec un impact important",
+
+        "social-sharing": {
+            "message": "J'ai facilement calculé l'impact carbone de mes déplacements avec CarbonSum.",
+            "lowImpact": "impact faible",
+            "mediumImpact": "impact modéré",
+            "highImpact": "impact important",
+            "kgCO2e": "kgCO2e"
+        },
+
+        "monthlyReport": "Bilan Mensuel",
+        "monthNotFullySync": "Ce mois n'a pas été totalement synchronisé, le rapport est donc incomplet.",
+        "butItsCurrentMonth": "C'est normal dans la mesure où ce rapport reflète le mois courant, qui n'est pas encore finalisé.",
+        "consequenceOfMove": "d'équivalent CO2 émis en conséquence de vos déplacements.",
+        "including": "dont",
+        "relatedToYourMoves": "liés à vos déplacements en"
+    },
+
+    "add-move": {
+        "NEW_MOVE": "Nouveau trajet",
+        "ADD": "Ajouter",
+        "modeOfTransportation": "Moyen de transport",
+        "noRouteFound": "Aucun itinéraire n'a été trouvé.",
+        "from": "Lieu de départ",
+        "to": "Lieu d'arrivée",
+
+        "person": "personne",
+        "people": "personnes",
+
+        "distance": "Distance",
+        "impact": "Impact",
+        "duration": "Durée"
+    },
+
+    "timeline": {
+        "MY_MOVES": "Mes trajets",
+        "NO_DATA": "Pas de données",
+        "NO_DATA_EXPLANATION": "Pas de données pour ce jour. L'avez-vous synchronisé ?",
+        "move": "Déplacement",
+        "vehicle": "Véhicule",
+        "average": "Moyen",
+        "averagePetrol": "Moyen essence",
+        "averageDiesel": "Moyen diesel",
+        "compactElectricVehicle": "Véhicule compact électrique",
+        "sedanElectricVehicle": "Véhicule berline électrique",
+        "nbPeople": "Nombre de personnes",
+        "type": "Type",
+        "unspecified": "Non précisé",
+        "TGV": "TGV",
+        "RER": "RER",
+        "TER": "TER",
+        "commentGoodForHealth": "Rien de mieux pour la santé !"
+    },
+
+    "infos": {
+        "learnMore": "En apprendre plus",
+        "carbonFootprint?": "Qu'est-ce qu'une empreinte carbone ?",
+        "carbonFootprintExplanation": "L'empreinte carbone est la quantité de CO2 gaz à effet de serre (GES) équivalents émises par l'activité d'une personne, d'un groupe, d'une organisation, d'une industrie, etc. L'outil de comptabilisation de ces émissions se nomme bilan carbone.",
+        "carbonsumPartialReport": "CarbonSum n'effectue pas un bilan carbone complet, mais se contente de sommer les différentes émissions de gaz à effet de serre liées à vos déplacements (personnels ou professionnels).",
+        "howIsItComputed?": "Comment les estimations sont-elles calculées sur CarbonSum ?",
+        "historyPosition": "CarbonSum utilise votre historique des positions de Google Maps. Il est nécessaire d'avoir activé cette fonctionnalité pour utiliser l'application. En fonction de la position de votre smartphone, Google Maps va estimer le moyen de transport utilisé et sur quelle distance. Il n'est pour le moment pas possible d'indiquer si vous avez pris la voiture tout seul ou à plusieurs.",
+        "whereDataFrom": "Chaque mode de transport n'émet pas la même quantité de gaz à effet de serre (facteur d'emission). CarbonSum se base sur les chiffres proposés par l'ADEME, l'Agence de l'environnement et de la maîtrise de l'énergie (référence en France).",
+        "eCO2Explanation": "Ces valeurs sont converties en équivalent CO2. Chaque gaz à effet de serre à un potentiel de réchauffement global (PRG) qui lui est propre. Cela est fonction de leur capacité à retenir les rayonnements solaires. Cela prend également en compte leur temps de vie dans l'atmosphère. Les données de PRG utilisées sont celles du 5e rapport du GIEC (2014, dernier en date).",
+        "seeBelowForData": "Les valeurs utilisées dans CarbonSum sont présentées dans le tableau ci-dessous.",
+        "dataTableTitle": "Données utilisées par CarbonSum pour générer ses rapports",
+        "meansOfTransportation": "Moyen de transport",
+        "carAverage": "Voiture (moyenne)",
+        "carAveragePetrol": "Voiture (moyenne essence)",
+        "carAverageDiesel": "Voiture (moyenne diesel)",
+        "carCompactElectric": "Voiture (compacte électrique)",
+        "carSedanElectric": "Voiture (berline électrique)",
+        "TGV": "TGV",
+        "RER": "RER",
+        "TER": "TER",
+        "subway": "Métro",
+        "bus": "Bus",
+        "tramway": "Tramway",
+        "moto": "Moto",
+        "explanationAvgPeopleCar": "Il est à noter que les émissions liées aux déplacements en voiture sont par défaut divisées par {{ avgNbPeopleCar }}. C'est en effet le nombre moyen de personne par véhicule d'après l'ADEME.",
+        "planeExplanation": " Concernant, le transport aérien, les émissions au kilomètre sont modulées en fonction de la distance (court, moyen, long courrier).",
+        "emissionFactorPlane": "Facteurs d'émission du transport aérien utilisés par CarbonSum",
+        "type": "Type",
+        "distance": "Distance",
+        "shortHaul": "Court courrier",
+        "middleHaul": "Moyen courrier",
+        "longHaul": "Long courrier",
+        "shortHaulDistance": "0-1000 km",
+        "middleHaulDistance": "1000-3500 km",
+        "longHaulDistance": ">3500 km",
+        "carbonsumReliable?": "CarbonSum est-il un outil fiable ?",
+        "carbonsumReliableGMaps": "CarbonSum ne propose qu'une estimation de vos émissions liés au transport. Sa fiabilité dépend d'une multitude de paramètres. Le premier : vos trajets sont-ils bien référencés dans Google Maps ? Pour vérifier cela, nous vous invitons à aller dans l'onglet \"Mes trajets\" sur Google Maps. La précision de ces références dépend de votre téléphone et de son paramétrage.",
+        "uncertaintyData": "Si ces données sont bien renseignées, le résultat devrait être globalement pertinent. Il ne doit pas être cru avec certitude et une marge d'imprécision est à prendre en compte. Les incertitudes des données fournies par l'ADEME dépendent d'un mode de transport à un autre.",
+        "canIUseCSEverywhere": "Puis-je utiliser CarbonSum dans le monde entier ?",
+        "carbonsumUsesFrenchData": "CarbonSum est actuellement proposé qu'en français et en anglais. Mais nous n'utilisons pour le moment que des données françaises. Un trajet en train n'aura pas exactement les mêmes émissions moyennes en France ou aux Etats-Unis par exemple (TGV vs train diesel). Sa pertinence peut-être être réduite si vous vous déplacez majoritairement en dehors de France métropolitaine.",
+        "whatCanIDoDecreaseCarbonFootprint": "Que puis-je faire pour diminuer mon empreinte carbone ?",
+        "toDecreaseCarbonFootprintTransport": "De manière relative au transport, emprunter les transports en commun tant que possible (plus facile en ville), et privilégier le train à l'avion pour les longs trajets, sont de bonnes pistes. Vous pouvez constater numériquement ci-dessus les émissions de chaque mode de transport.",
+        "youCanAlsoOffset": "Vous pouvez également faire un don à des organismes qui compensent les émissions de gaz à effet de serre. CarbonSum vous proposera prochainement de la faire directement via l'application.",
+        "howToGiveFeedback": "Comment faire un retour sur cette application ?",
+        "gForm": "Si vous rencontrez un bug ou que vous avez une suggestion d'amélioration, vous êtes invités à le faire via le formulaire suivant :",
+        "giveFeedbackCS": "Donner mon feedback sur CarbonSum",
+        "emailAlsoAvailable": "Vous pouvez également me joindre par e-mail :",
+        "giveFeedbackSocialNetworks": "Nous sommes également à votre disposition sur les réseaux sociaux (Twitter, Facebook, Instagram). Les liens sont disponibles sur la page Paramètre."
+    },
+
+    "help": {
+        "help": "Aide",
+        "connectedButNoTrips": "Je suis connecté à mon compte Google mais je n'ai aucun trajet",
+        "connectedButNoTripsExplanation": "Pour que votre compte Google enregistre vos divers déplacements, il faut que votre <i>historique des positions</i> soit activé. Pour ce faire, il vous faut ouvrir l'application Google Maps, puis cliquer sur votre <b>profil</b> en haut à droite, puis <b>Vos données dans l'application Maps</b>. Sur cette page, vous verrez si cette fonctionnalité est belle et bien activée. De plus, il faut également sélectionner un téléphone qui se synchronisera avec votre compte Google. Pour cela, veuillez cliquer sur <b>Historique des positions</b> puis vérifiez que votre téléphone est coché dans <b>Appareils associés à ce compte</b>. <br><br> <a href='https://support.google.com/maps/answer/6258979?hl=fr'>Page d'aide Google Maps - Mes trajets</a>"
+    },
+
+    "intro": {
+        "carbonFootprintReport": "CarbonSum vous permet d’effectuer le bilan carbone de vos déplacements.",
+        "continue": "Continuer",
+        "csUsesGmaps": "CarbonSum utilise l’historique de position de Google Maps pour retrouvez vos trajets et les synchroniser.",
+        "possibleToManuallyAddTrips": "Il est cependant possible de renseigner manuellement ses trajets.",
+        "howToDecreaseCarbonImpact": "Découvrez comment réduire votre impact carbone.",
+        "connectWithGoogle": "Se connecter avec Google",
+        "weDoNotUseYourData": "CarbonSum utilise l’historique de vos trajets Google Maps seulement pour calculer votre impact carbone, nous ne stockons pas ou utilisons vos données.",
+        "youCanStop": "Vous pouvez à tout moment dissocier votre compte Google et aucune données ne sera enregistrées.",
+        "ignore": "Ignorer"
     }
 }

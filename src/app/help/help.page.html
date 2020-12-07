@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/settings" text=""></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>{{ 'help.help' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ 'help.connectedButNoTrips' | translate }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p style="text-align: justify;" [innerHTML]="'help.connectedButNoTripsExplanation' | translate">
+      </p>
+      <br>
+      <p>
+        <ion-img src="https://getcarbonsum.app/help_gmaps_sync.gif"></ion-img>
+      </p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

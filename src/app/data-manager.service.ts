@@ -28,11 +28,17 @@ export interface DayData {
   providedIn: 'root'
 })
 export class DataManagerService {
+  private verbose: boolean = true;
 
   public logged: boolean = false;
   public syncing: boolean = false;
   public synced: boolean = false;
   public stopSync: boolean = false;
+  private timeoutThreshold: number = 10000; // ms, duration after which we retry the request
+
+  public currentSync: Date;
+  public syncUntil: Date;
+  public remainingSyncTimePercent: number = 0.0;
 
   private currentSyncDate: string;
   private iabRef;
@@ -45,17 +51,6 @@ export class DataManagerService {
 
   constructor(private iab: InAppBrowser, private iabDL: InAppBrowser, private platform: Platform, private Ecology: EcologyToolsService, private mapService: MapService,  private localNotifications: LocalNotifications, private translate: TranslateService) {
     this.testGoogleConnection();
-
-    /*  
-    this.logged = true;
-    setTimeout(() => {
-      this.syncing = true;
-    }, 1000);
-    setTimeout(() => {
-      this.synced = true;
-      this.syncing = false;
-    }, 8000);
-    */
 
     this.localNotifications.on('stopSync').subscribe(() => {
       this.askStopSync();
@@ -136,6 +131,8 @@ export class DataManagerService {
           iabRef.hide();
 
           this.onLogIn.emit(null);
+
+          this.iabRef.close();
         }
       });
   
@@ -165,6 +162,19 @@ export class DataManagerService {
 
     downloadGmapsData(year, month, day, cb){
       console.log('downloadData');
+
+      var successfullyLoaded = false;
+      var startDLTime = Date.now();
+
+      setTimeout(() => {
+        if (!successfullyLoaded){
+          console.warn("[downloadGmapsData] Request timed out - we retry, params:", { year: year, month: month, day: day });
+
+          this.iabDLRef.close();
+          
+          this.downloadGmapsData(year, month, day, cb ? cb : () => {});
+        }
+      }, this.timeoutThreshold);
 	
       year = year || (new Date().getFullYear());
       month = (month >= 0 && month <= 12) ? month : (new Date().getMonth());
@@ -174,7 +184,7 @@ export class DataManagerService {
       console.log(urlDate);
       var nb = 0;
 
-        if (this.logged){
+      if (this.logged){
         this.iabRef.hide();
         this.iabDLRef = this.iab.create("https://www.google.fr/", "_blank", "EnableViewPortScale=yes,location=no,hidden=yes,hardwareback=no,hidenavigationbuttons=yes,zoom=no,fullscreen=no");
         
@@ -186,29 +196,50 @@ export class DataManagerService {
         //this.timeoutManagement.cb = cb ? cb : function (foo){};
 
           this.iabDLRef.on('loadstop').subscribe(event => {
-          nb++;
-          if (nb > 1) return;
+            nb++;
 
-          this.iabDLRef.on('message').subscribe((event) => {
-            // console.log('postmessage received', event);
-            //this.timeoutManagement.downloaded = true;
+            if (this.verbose) console.log('[downloadGmapsData] loadStop:', event, "params:", { year: year, month: month, day: day }, "nb:", nb);
 
-            if (localStorage.monitorPerformance) console.time("KML parsing");
-            
-            const parser = new DOMParser();
-            const srcDOM = parser.parseFromString(event.data.kml, "application/xml");
-            const json = xml2json(srcDOM);
+            if (nb > 1) return;
 
-            if (localStorage.monitorPerformance) console.timeEnd("KML parsing");
-      
-            console.log(json);
+            this.iabDLRef.on('message').subscribe((event) => {
+              // console.log('postmessage received', event);
+              //this.timeoutManagement.downloaded = true;
 
-            if (cb){
-              cb(json, this);
-            }
+              if (event.data.status != "ok"){
+                console.error('[downloadGmapsData] Error while doing the xhr request. data:', event);
+                return;
+              }
+
+              if (localStorage.monitorPerformance) console.time("KML parsing");
+              
+              const parser = new DOMParser();
+              const srcDOM = parser.parseFromString(event.data.kml, "application/xml");
+              const json = xml2json(srcDOM);
+
+              if (localStorage.monitorPerformance) console.timeEnd("KML parsing");
+        
+              console.log(json);
+
+              successfullyLoaded = true;
+              if (this.verbose) console.log("[downloadGmapsData] data loaded in:", (Date.now() - startDLTime)/1000, "s., data size:", event.data.kml.length/1000, "kB");
+
+              this.iabDLRef.close();
+
+              if (cb){
+                cb(json, this);
+              }
+            });
+
+          this.iabDLRef.on('loaderror').subscribe((event) => {
+            console.error('[downloadGmapsData] loadError:', event);
           });
 
-          this.iabDLRef.executeScript({ code:  "const req = new XMLHttpRequest(); req.open('GET', '"+ urlDate +"'); req.onload = function(){ var message = { kml: req.response }; webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify(message)); }; req.send(null);" });
+          this.iabDLRef.on('exit').subscribe((event) => {
+            if (this.verbose) console.log('[downloadGmapsData] exit:', event);
+          });
+
+          this.iabDLRef.executeScript({ code:  "const req = new XMLHttpRequest(); req.open('GET', '"+ urlDate +"'); req.ontimeout = function(){ console.error('XHR request timed out -', req.responseText || 'Unknown reason'); }; req.onerror = function(){ console.error('XHR request failed. -', req.responseText || 'Unknown reason'); var message = { status: 'nok', error: req.responseText || 'unknown error', kml: '' }; webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify(message)); }; req.onload = function(){ var message = { status: 'ok', kml: req.response }; webkit.messageHandlers.cordova_iab.postMessage(JSON.stringify(message)); }; req.send(null);" });
           
           
           });
@@ -360,6 +391,10 @@ export class DataManagerService {
     let synchronizeUntil = (localStorage.synchronizeUntil || "2020-01-01").split("-");
     var stopDate = new Date(parseInt(synchronizeUntil[0], 10), parseInt(synchronizeUntil[1], 10)-1, parseInt(synchronizeUntil[2], 10));
 
+    this.syncUntil = stopDate;
+    this.currentSync = syncDate;
+    this.computeRemainingDateSync();
+
 		this.currentSyncDate = syncDate.getDate() +"/"+ (syncDate.getMonth()+1) +"/"+ syncDate.getFullYear();
 		//this.changeDetectorRef.detectChanges();
 
@@ -401,8 +436,9 @@ export class DataManagerService {
       
       this.localNotifications.schedule({
         title: this.translate.instant('general.synchronisationComplete'),
-        id: 42,
-        smallIcon: 'res://ic_stat_cloud_done'
+        text: '',
+        id: 42
+        // , smallIcon: 'res://ic_stat_cloud_done'
       });
 		}
   }
@@ -447,20 +483,22 @@ export class DataManagerService {
     while (currDate.getTime() < to.getTime()){
       if (this.isDaySync(mapsData, currDate)){
         let dayData = this.getDayData(mapsData, currDate);
-        let data = this.Ecology.computeCO2day(dayData);
+        if (Object.keys(dayData).length){
+          let data = this.Ecology.computeCO2day(dayData);
 
-        report.sumCO2 += data.sumCO2;
-        report.sumCar += data.sumCar;
-        report.sumPlane += data.sumPlane;
-        report.sumDistance += this.Ecology.getDistanceMoves(dayData.moves);
+          report.sumCO2 += data.sumCO2;
+          report.sumCar += data.sumCar;
+          report.sumPlane += data.sumPlane;
+          report.sumDistance += this.Ecology.getDistanceMoves(dayData.moves);
 
-        let ratedMoves = this.Ecology.rateMoves(dayData.moves ? dayData.moves : []);
-        report.movesData.nb += ratedMoves.nb;
-        report.movesData.good += ratedMoves.good;
-        report.movesData.medium += ratedMoves.medium;
-        report.movesData.bad += ratedMoves.bad;
+          let ratedMoves = this.Ecology.rateMoves(dayData.moves ? dayData.moves : []);
+          report.movesData.nb += ratedMoves.nb;
+          report.movesData.good += ratedMoves.good;
+          report.movesData.medium += ratedMoves.medium;
+          report.movesData.bad += ratedMoves.bad;
 
-        report.nbDaysSync++;
+          report.nbDaysSync++;
+        }
       }
 
       currDate.setDate(currDate.getDate()+1);
@@ -482,7 +520,21 @@ export class DataManagerService {
     let month = date.getMonth().toString();
     let day = date.getDate().toString();
 
-    return mapsData && mapsData[year] && mapsData[year][month] && mapsData[year][month][day];
+    if (mapsData && mapsData[year] && mapsData[year][month] && mapsData[year][month][day]){
+      return mapsData && mapsData[year] && mapsData[year][month] && mapsData[year][month][day];
+    } else {
+      return {};
+    }
+  }
+
+  computeRemainingDateSync(){
+    let now = Date.now();
+    let deltaTimeCurrentSync = now - this.currentSync.getTime();
+    let deltaTimeSyncUntil = now - this.syncUntil.getTime();
+
+    this.remainingSyncTimePercent = deltaTimeCurrentSync/deltaTimeSyncUntil;
+    
+    return this.remainingSyncTimePercent;
   }
 }
 

@@ -7,10 +7,10 @@
       <h2 class="font-size-name">CarbonSum</h2>
 
       <img src="/assets/images/foodDeliveryColour.svg" />
-      <p class="margin-top-paragraph">CarbonSum vous permet d’effectuer le bilan carbone de vos déplacements.</p>
+      <p class="margin-top-paragraph">{{ 'intro.carbonFootprintReport' | translate }}</p>
 
       <div class="center-max-width margin-top-button">
-        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">Continuer</ion-button>
+        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">{{ 'intro.continue' | translate }}</ion-button>
       </div>
     </ion-slide>
 
@@ -19,11 +19,11 @@
       <h2 class="font-size-name">CarbonSum</h2>
 
       <img src="/assets/images/googleMapsIntroduction.png" />
-      <p>CarbonSum utilise l’historique de position de Google Maps pour retrouvez vos trajets et les synchroniser.</p>
-      <p>Il est cependant possible de renseigner manuellement ses trajets.</p>
+      <p>{{ 'intro.csUsesGmaps' | translate }}</p>
+      <p>{{ 'intro.possibleToManuallyAddTrips' | translate }}</p>
  
       <div class="center-max-width margin-top-button">
-        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">Continuer</ion-button>
+        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">{{ 'intro.continue' | translate }}</ion-button>
       </div>
     </ion-slide>
 
@@ -40,10 +40,10 @@
       <h2 class="font-size-name">CarbonSum</h2>
 
       <img src="/assets/images/hikerManColour.svg" />
-      <p class="margin-top-paragraph">Découvrez comment réduire votre impact carbone.</p>
+      <p class="margin-top-paragraph">{{ 'intro.howToDecreaseCarbonImpact' | translate }}</p>
 
       <div class="center-max-width margin-top-button">
-        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">Continuer</ion-button>
+        <ion-button color="tertiary" expand="block" size="large" (click)="slideNext()">{{ 'intro.continue' | translate }}</ion-button>
       </div>
     </ion-slide>
 
@@ -59,24 +59,24 @@
       <img src="/assets/icon/logo-carbonsum.svg" class="margin-top-logo" />
       <h2 class="font-size-name">CarbonSum</h2>
 
-     <p class="explanation-google-maps">CarbonSum utilise l’historique de position de Google Maps pour retrouvez vos trajets et les synchroniser.</p>
+     <p class="explanation-google-maps">{{ 'intro.csUsesGmaps' | translate }}</p>
 
      <div class="center-max-width">
       <ion-button expand="block" color="light" class="connection-google" (click)="clickGoogleButton()">
         <ion-icon src="/assets/images/google.svg"></ion-icon>
-        Se connecter avec Google
+        {{ 'intro.connectWithGoogle' | translate }}
       </ion-button>
     </div>
     <hr>
       <p class="small-infos">
-        CarbonSum utilise l’historique de vos trajets Google Maps seulement pour calculer votre impact carbone, nous ne stockons pas ou utilisons vos données.
+        {{ 'intro.weDoNotUseYourData' | translate }}
       </p>
       <p class="small-infos">
-        Vous pouvez à tout moment dissocier votre compte Google et aucune données ne sera enregistrées.
+        {{ 'intro.youCanStop' | translate }}
       </p>
 
       <div class="center-max-width">
-        <ion-button color="tertiary" href="/home" (click)="checkIntroSeen()">Ignorer</ion-button>
+        <ion-button color="tertiary" href="/home" (click)="checkIntroSeen()">{{ 'intro.ignore' | translate }}</ion-button>
       </div>
     </ion-slide>
   </ion-slides>

@@ -1,131 +1,134 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/" text="{{ 'general.back' | translate }}"></ion-back-button>
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
     </ion-buttons>
 
-    <ion-title>En apprendre plus</ion-title>
+    <ion-title>{{ "infos.learnMore" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-card>
     <ion-card-content>
-      <h1>Qu'est-ce qu'une empreinte carbone ?</h1>
+      <h1>{{ 'infos.carbonFootprint?' | translate }}</h1>
       <p>
-        L'empreinte carbone est la quantité de CO2 gaz à effet de serre (GES) équivalents émises par l'activité d'une personne, d'un groupe, d'une organisation, d'une industrie, etc. L'outil de comptabilisation de ces émissions se nomme bilan carbone.
+        {{ 'infos.carbonFootprintExplanation' | translate }}
       </p>
 
       <p>
-        CarbonSum n'effectue pas un bilan carbone complet, mais se contente de sommer les différentes émissions de gaz à effet de serre liées à vos déplacements (personnels ou professionnels).
+        {{ 'infos.carbonsumPartialReport' | translate }}
       </p>
     </ion-card-content>
   </ion-card>
 
   <ion-card>
     <ion-card-content>
-      <h1>Comment les estimations sont-elles calculées sur CarbonSum ?</h1>
+      <h1>{{ 'infos.howIsItComputed?' | translate }}</h1>
       <p>
-        CarbonSum utilise votre historique des positions de Google Maps. Il est nécessaire d'avoir activé cette fonctionnalité pour utiliser l'application. En fonction de la position de votre smartphone, Google Maps va estimer le moyen de transport utilisé et sur quelle distance. Il n'est pour le moment pas possible d'indiquer si vous avez pris la voiture tout seul ou à plusieurs.
+        {{ 'infos.historyPosition' | translate }}
       </p>
       <p>
-        Chaque mode de transport n'émet pas la même quantité de gaz à effet de serre. CarbonSum se base sur les chiffres proposés par l'ADEME, l'Agence de l'environnement et de la maîtrise de l'énergie (référence en France).
+        {{ 'infos.whereDataFrom' | translate }}
       </p>
       <p style="margin: auto; text-align: center;">
           <a href="https://www.ademe.fr/"><img src="/assets/ADEME_logo.svg" alt="Logo ADEME" /></a>
       </p>
       <p>
-        Ces valeurs sont converties en équivalent CO2. Chaque gaz à effet de serre à un potentiel de réchauffement global (PRG) qui lui est propre. Cela est fonction de leur capacité à retenir les rayonnements solaires. Cela prend également en compte leur temps de vie dans l'atmosphère. Les données de PRG utilisées sont celles du 5e rapport du GIEC (2014, dernier en date).
+        {{ 'infos.eCO2Explanation' | translate }}
       </p>
       <p>
-        Les valeurs utilisées dans CarbonSum sont présentées dans le tableau ci-dessous.
+        {{ 'infos.seeBelowForData' | translate }}
       </p>
 
       <table>
-          <caption>Données utilisées par CarbonSum pour générer ses rapports</caption>
+          <caption>{{ 'infos.dataTableTitle' | translate }}</caption>
           <thead>
             <tr>
-              <th>Moyen de transport</th>
-              <th>gCO2e/passager.km</th>
+              <th>{{ 'infos.meansOfTransportation' | translate }}</th>
+              <th>{{ 'general.gCO2e-passenger-km' | translate}}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Voiture (moyenne)</td>
+              <td>{{ 'infos.carAverage' | translate }}</td>
               <td>{{ CO2table.car.averageCarAdeme }}</td>
             </tr>
             <tr>
-              <td>Voiture (moyenne essence)</td>
+              <td>{{ 'infos.carAveragePetrol' | translate }}</td>
               <td>{{ CO2table.car.averageCarPetrolAdeme }}</td>
             </tr>
             <tr>
-              <td>Voiture (moyenne diesel)</td>
+              <td>{{ 'infos.carAverageDiesel' | translate }}</td>
               <td>{{ CO2table.car.averageCarDieselAdeme }}</td>
             </tr>
             <tr>
-              <td>Voiture (compacte électrique)</td>
+              <td>{{ 'infos.carCompactElectric' | translate }}</td>
               <td>{{ CO2table.car.compactElectric }}</td>
             </tr>
             <tr>
-              <td>Voiture (berline électrique)</td>
+              <td>{{ 'infos.carSedanElectric' | translate }}</td>
               <td>{{ CO2table.car.sedanElectric }}</td>
             </tr>
             <tr>
-              <td>TGV</td>
+              <td>{{ 'infos.TGV' | translate }}</td>
               <td>{{ CO2table.train.TGV }}</td>
             </tr>
             <tr>
-              <td>RER</td>
+              <td>{{ 'infos.RER' | translate }}</td>
               <td>{{ CO2table.train.RER }}</td>
             </tr>
             <tr>
-              <td>Métro</td>
+              <td>{{ 'infos.TER' | translate }}</td>
+              <td>{{ CO2table.train.TER }}</td>
+            </tr>
+            <tr>
+              <td>{{ 'infos.subway' | translate }}</td>
               <td>{{ CO2table.subway }}</td>
             </tr>
             <tr>
-              <td>Bus</td>
+              <td>{{ 'infos.bus' | translate }}</td>
               <td>{{ CO2table.bus }}</td>
             </tr>
             <tr>
-              <td>Tramway</td>
+              <td>{{ 'infos.tramway' | translate }}</td>
               <td>{{ CO2table.tramway }}</td>
             </tr>
             <tr>
-              <td>Moto</td>
+              <td>{{ 'infos.moto' | translate }}</td>
               <td>{{ CO2table.moto }}</td>
             </tr>
           </tbody>
         </table>
-      <p>
-        Il est à noter que les émissions liées aux déplacements en voiture sont par défaut divisées par {{ CO2table.averageNumberOfPeopleInACar }}. C'est en effet le nombre moyen de personne par véhicule d'après l'ADEME.
+      <p [translate]="'infos.explanationAvgPeopleCar'" [translateParams]="{ avgNbPeopleCar: CO2table.averageNumberOfPeopleInACar }">
       </p>
       <hr>
       <p>
-        Concernant, le transport aérien, les émissions au kilomètre sont modulées en fonction de la distance (court, moyen, long courrier).
+       {{ 'infos.planeExplanation' | translate }}
       </p>
       <table>
-        <caption>Facteurs d'émission du transport aérien utilisés par CarbonSum</caption>
+        <caption>{{ 'infos.emissionFactorPlane' | translate }}</caption>
         <thead>
           <tr>
-            <th>Type</th>
-            <th>Distance</th>
-            <th>gCO2e/passager.km</th>
+            <th>{{ 'infos.type' | translate }}</th>
+            <th>{{ 'infos.distance' | translate }}</th>
+            <th>{{ 'general.gCO2e-passenger-km' | translate }}</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Court courrier</td>
-            <td>0-1000 km</td>
+            <td>{{ 'infos.shortHaul' | translate }}</td>
+            <td>{{ 'infos.shortHaulDistance' | translate }}</td>
             <td>{{ CO2table.plane.distanceToCO2(500) }}</td>
           </tr>
           <tr>
-            <td>Moyen courrier</td>
-            <td>1000-3500 km</td>
+            <td>{{ 'infos.middleHaul' | translate }}</td>
+            <td>{{ 'infos.middleHaulDistance' | translate }}</td>
             <td>{{ CO2table.plane.distanceToCO2(2000) }}</td>
           </tr>
           <tr>
-            <td>Long courrier</td>
-            <td>>3500 km</td>
+            <td>{{ 'infos.longHaul' | translate }}</td>
+            <td>{{ 'infos.longHaulDistance' | translate }}</td>
             <td>{{ CO2table.plane.distanceToCO2(10000) }}</td>
           </tr>
         </tbody>
@@ -134,44 +137,46 @@
   </ion-card>
   <ion-card>
     <ion-card-content>
-      <h1>CarbonSum est-il un outil fiable ?</h1>
+      <h1>{{ 'infos.carbonsumReliable?' | translate }}</h1>
       <p>
-        CarbonSum ne propose qu'une estimation de vos émissions liés au transport. Sa fiabilité dépend d'une multitude de paramètres. Le premier : vos trajets sont-ils bien référencés dans Google Maps ? Pour vérifier cela, nous vous invitons à aller dans l'onglet "Mes trajets" sur Google Maps. La précision de ces références dépend de votre téléphone et de son paramétrage.
+        {{ 'infos.carbonsumReliableGMaps' | translate }}
       </p>
       <p>
-        Si ces données sont bien renseignées, le résultat devrait être globalement pertinent. Il ne doit pas être cru avec certitude et une marge d'imprécision est à prendre en compte. Les incertitudes des données fournies par l'ADEME dépendent d'un mode de transport à un autre.
-      </p>
-    </ion-card-content>
-  </ion-card>
-  <ion-card>
-    <ion-card-content>
-      <h1>Puis-je utiliser CarbonSum dans le monde entier ?</h1>
-      <p>
-        CarbonSum n'est actuellement proposé qu'en français. Et pour une bonne raison : nous utilisons des données françaises. Un trajet en train n'aura pas exactement les mêmes émissions moyennes en France ou aux Etats-Unis par exemple (TGV vs train diesel). Sa pertinence peut-être être réduite si vous vous déplacez majoritairement en dehors de France métropolitaine.
-      </p>
-      
-    </ion-card-content>
-  </ion-card>
-  <ion-card>
-    <ion-card-content>
-      <h1>Que puis-je faire pour diminuer mon empreinte carbone ?</h1>
-      <p>
-        De manière relative au transport, emprunter les transports en commun tant que possible (plus facile en ville), et privilégier le train à l'avion pour les longs trajets, sont de bonnes pistes. Vous pouvez constater numériquement ci-dessus les émissions de chaque mode de transport.
-      </p>
-      <p>
-        Vous pouvez également faire un don à des organismes qui compensent les émissions de gaz à effet de serre. CarbonSum vous proposera prochainement de la faire directement via l'application.
+        {{ 'infos.uncertaintyData' | translate }}
       </p>
     </ion-card-content>
   </ion-card>
   <ion-card>
     <ion-card-content>
-      <h1>Comment faire un retour sur cette application ?</h1>
+      <h1>{{ 'infos.canIUseCSEverywhere' | translate }}</h1>
       <p>
-        Si vous rencontrez un bug ou que vous avez une suggestion d'amélioration, vous êtes invités à le faire via le formulaire suivant :<br />
-        <a href="https://forms.gle/RRK4KBosVw6qvS436">Donner mon feedback sur CarbonSum</a>
+        {{ 'infos.carbonsumUsesFrenchData' | translate }}
+      </p>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <h1>{{ 'infos.whatCanIDoDecreaseCarbonFootprint' | translate }}</h1>
+      <p>
+        {{ 'infos.toDecreaseCarbonFootprintTransport' | translate }}
       </p>
       <p>
-        Vous pouvez également me joindre par e-mail : <a href="mailto:alexis@delrieu.me">alexis@delrieu.me</a>
+        {{ 'infos.youCanAlsoOffset' | translate }}
+      </p>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-content>
+      <h1>{{ 'infos.howToGiveFeedback' | translate }}</h1>
+      <p>
+        {{ 'infos.gForm' | translate }}<br />
+        <a href="https://forms.gle/eCZBC1KQ54i9mckD6">{{ 'infos.giveFeedbackCS' | translate }}</a>
+      </p>
+      <p>
+        {{ 'infos.emailAlsoAvailable' | translate }} <a href="mailto:alexis@getcarbonsum.app">alexis@getcarbonsum.app</a>
+      </p>
+      <p>
+        {{ 'infos.giveFeedbackSocialNetworks' | translate }}
       </p>
     </ion-card-content>
   </ion-card>

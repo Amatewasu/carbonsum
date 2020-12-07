@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
 
-    <ion-title>Mes trajets</ion-title>
+    <ion-title>{{ 'timeline.MY_MOVES' | translate }}</ion-title>
 
     <ion-buttons slot="end">
       <ion-button id="delete-move-day" (click)="deleteMovesOfToday()">
@@ -15,10 +15,10 @@
   <ion-card *ngIf="!data || !data.moves || !data.moves.length">
     <ion-card-header>
       <ion-card-subtitle>{{displayDateNoDataToday()}}</ion-card-subtitle>
-      <ion-card-title>Pas de données</ion-card-title>
+      <ion-card-title>{{ 'timeline.NO_DATA' | translate }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      Pas de données pour ce jour. L'avez-vous synchronisé ?
+      {{ 'timeline.NO_DATA_EXPLANATION' | translate }}
     </ion-card-content>
   </ion-card>
 
@@ -35,17 +35,17 @@
       <ion-card-subtitle>{{(move && move.begin) ? (displayDateSubtitleMove(move.begin)) : ''}}</ion-card-subtitle>
       <ion-card-title>
         <ion-item>
-          <ion-label>Déplacement</ion-label>
+          <ion-label>{{ 'timeline.move' | translate }}</ion-label>
           <ion-select [value]="move.type" (ionChange)="updateMoveType($event, move)">
-            <ion-select-option value="car">en voiture</ion-select-option>
-            <ion-select-option value="train">en train</ion-select-option>
-            <ion-select-option value="bus">en bus</ion-select-option>
-            <ion-select-option value="subway">en métro</ion-select-option>
-            <ion-select-option value="plane">en avion</ion-select-option>
-            <ion-select-option value="tramway">en tramway</ion-select-option>
-            <ion-select-option value="moto">en moto</ion-select-option>
-            <ion-select-option value="bike">en vélo</ion-select-option>
-            <ion-select-option value="walk">à pied</ion-select-option>
+            <ion-select-option value="car">{{ 'general.by' | translate }} {{ 'general.car' | translate | lowercase }}</ion-select-option>
+            <ion-select-option value="train">{{ 'general.by' | translate }} {{ 'general.train' | translate | lowercase }}</ion-select-option>
+            <ion-select-option value="bus">{{ 'general.by' | translate }} {{ 'general.bus' | translate | lowercase }}</ion-select-option>
+            <ion-select-option value="subway">{{ 'general.by' | translate }} {{ 'general.subway' | translate | lowercase }}</ion-select-option>
+            <ion-select-option value="plane">{{ 'general.by' | translate }} {{ 'general.plane' | translate | lowercase }}</ion-select-option>
+            <ion-select-option value="tramway">{{ 'general.by' | translate }} {{ 'general.tramway' | translate | lowercase }}</ion-select-option>
+            <ion-select-option value="moto">{{ 'general.by' | translate }} {{ 'general.moto' | translate | lowercase }}</ion-select-option>
+            <ion-select-option value="bike">{{ 'general.by' | translate }} {{ 'general.bike' | translate | lowercase }}</ion-select-option>
+            <ion-select-option value="walk">{{ 'general.byFoot' | translate }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-card-title>
@@ -53,13 +53,13 @@
     <ion-card-content>
       <ion-list class="settings-move settings-move-car" *ngIf="move.type == 'car'">        
         <ion-item>
-          <ion-label>Véhicule</ion-label>
+          <ion-label>{{ 'timeline.vehicle' | translate }}</ion-label>
           <ion-select [value]="move.carType || getDefaultSubmode('car')" (ionChange)="updateCarType($event, move)">
-            <ion-select-option value="averageCarAdeme">Moyen</ion-select-option>
-            <ion-select-option value="averageCarPetrolAdeme">Moyen essence</ion-select-option>
-            <ion-select-option value="averageCarDieselAdeme">Moyen diesel</ion-select-option>
-            <ion-select-option value="compactElectric">Véhicule compacte électrique</ion-select-option>
-            <ion-select-option value="sedanElectric">Véhicule berline électrique</ion-select-option>
+            <ion-select-option value="averageCarAdeme">{{ 'timeline.average' | translate }}</ion-select-option>
+            <ion-select-option value="averageCarPetrolAdeme">{{ 'timeline.averagePetrol' | translate }}</ion-select-option>
+            <ion-select-option value="averageCarDieselAdeme">{{ 'timeline.averageDiesel' | translate }}</ion-select-option>
+            <ion-select-option value="compactElectric">{{ 'timeline.compactElectricVehicle' | translate }}</ion-select-option>
+            <ion-select-option value="sedanElectric">{{ 'timeline.sedanElectricVehicle' | translate }}</ion-select-option>
             <!--
             <ion-select-option value="m">Véhicule 2</ion-select-option>
             <ion-select-option value="m">Véhicule 3</ion-select-option>
@@ -69,10 +69,10 @@
       
         <ion-item>
           <ion-label>
-            Nombre de personnes
+            {{ 'timeline.nbPeople' | translate }}
           </ion-label>
           <ion-select value="{{move.nbPeople || getAverageNumberOfPeopleInACar(move)}}" (ionChange)="updatenbPeople($event, move)">
-            <ion-select-option value="{{getAverageNumberOfPeopleInACar(move)}}">{{Ecology.CO2table.car.averageNumberOfPeopleInACar}}</ion-select-option>
+            <ion-select-option value="{{getAverageNumberOfPeopleInACar(move)}}">{{ Ecology.CO2table.car.averageNumberOfPeopleInACar }}</ion-select-option>
             <ion-select-option value="1">1</ion-select-option>
             <ion-select-option value="2">2</ion-select-option>
             <ion-select-option value="3">3</ion-select-option>
@@ -87,12 +87,12 @@
       <!-- Train settings -->
       <ion-list class="settings-move settings-move-train" *ngIf="move.type == 'train'">        
         <ion-item>
-          <ion-label>Type</ion-label>
+          <ion-label>{{ 'timeline.type' | translate }}</ion-label>
           <ion-select (ionChange)="updateTrainType($event, move)">
-            <ion-select-option value="">Non précisé</ion-select-option>
-            <ion-select-option value="TGV">TGV</ion-select-option>
-            <ion-select-option value="RER">RER</ion-select-option>
-            <ion-select-option value="TER">TER</ion-select-option>
+            <ion-select-option value="">{{ 'timeline.unspecified' | translate }}</ion-select-option>
+            <ion-select-option value="TGV">{{ 'timeline.TGV' | translate }}</ion-select-option>
+            <ion-select-option value="RER">{{ 'timeline.RER' | translate }}</ion-select-option>
+            <ion-select-option value="TER">{{ 'timeline.TER' | translate }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-list>
@@ -101,7 +101,7 @@
     <div  *ngIf="move.type == 'walk'">        
       <ion-item>
         <ion-icon name="fitness-outline" slot="end"></ion-icon>
-        <ion-label>Rien de mieux pour la santé !</ion-label>
+        <ion-label>{{ 'timeline.commentGoodForHealth' | translate }}</ion-label>
       </ion-item>
     </div>
   </ion-card-content>

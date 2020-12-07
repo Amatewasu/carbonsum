@@ -8,8 +8,6 @@ import 'moment/min/locales';
 
 import { ToastController } from '@ionic/angular';
 
-moment.locale('fr-FR');
-
 @Component({
   selector: 'app-timeline',
   templateUrl: './timeline.page.html',
@@ -29,7 +27,11 @@ export class TimelinePage implements OnInit {
   private currentYear : number = new Date().getFullYear();
 
   constructor(private dataManager : DataManagerService, public Ecology : EcologyToolsService, public toastController: ToastController) {
-    
+    if (localStorage.lang == 'en'){
+      moment.locale('en-US');
+    } else {
+      moment.locale('fr-FR');
+    }
   }
 
   ngOnInit() {

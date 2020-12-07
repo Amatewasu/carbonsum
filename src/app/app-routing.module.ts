@@ -22,6 +22,10 @@ const routes: Routes = [
   {
     path: 'add-move',
     loadChildren: () => import('./add-move/add-move.module').then(m => m.AddMovePageModule)
+  },
+  {
+    path: 'help',
+    loadChildren: () => import('./help/help.module').then( m => m.HelpPageModule)
   }
 ];
 

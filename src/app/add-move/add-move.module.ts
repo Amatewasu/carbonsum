@@ -9,6 +9,8 @@ import { AddMovePageRoutingModule } from './add-move-routing.module';
 
 import { AddMovePage } from './add-move.page';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 const routes: Routes = [
   {
     path: ':yearID/:monthID/:dayID',
@@ -22,7 +24,8 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     AddMovePageRoutingModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    TranslateModule.forChild()
   ],
   declarations: [AddMovePage]
 })

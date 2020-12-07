@@ -67,7 +67,7 @@ export class AppComponent {
     }
 
     if (!localStorage.synchronizeUntil){
-      localStorage.synchronizeUntil = "2020-01-01";
+      localStorage.synchronizeUntil = "2020-09-01";
     }
 
     this.platform.ready().then(() => {

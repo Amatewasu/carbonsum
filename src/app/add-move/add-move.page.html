@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/timeline" text="{{ 'general.back' | translate }}"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/timeline" text=""></ion-back-button>
     </ion-buttons>
-    <ion-title>Nouveau trajet</ion-title>
+    <ion-title>{{ 'add-move.NEW_MOVE' | translate }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button disabled id="add-move" (click)="addMove()">Ajouter</ion-button>
+      <ion-button disabled id="add-move" (click)="addMove()">{{ 'add-move.ADD' | translate }}</ion-button>
     </ion-buttons>
 
     <ion-progress-bar type="indeterminate" *ngIf="loading"></ion-progress-bar>
@@ -15,7 +15,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-searchbar id="searchbar-location-from" placeholder="Lieu de départ" (ionChange)="updateSearbarLocation($event)" [color]="addressesFrom.length == 0 && selectedAddressFrom ? 'primary' : ''" [value]="selectedAddressFrom" searchIcon="pin" debounce="500"></ion-searchbar>
+    <ion-searchbar id="searchbar-location-from" placeholder="{{ 'add-move.from' | translate }}" (ionChange)="updateSearbarLocation($event)" [color]="addressesFrom.length == 0 && selectedAddressFrom ? 'primary' : ''" [value]="selectedAddressFrom" searchIcon="pin" debounce="500"></ion-searchbar>
     <div style="position: absolute; width: 100%; z-index: 999;overflow:visible;">
       <ion-list lines="none" id="list-location-from" *ngIf="addressesFrom.length > 0">
         <ion-item style="overflow: visible;" button *ngFor="let address of addressesFrom" (click)="selectLocation($event, address.place_name, address.center)">
@@ -25,7 +25,7 @@
       </ion-list>
     </div>
 
-    <ion-searchbar id="searchbar-location-to" placeholder="Lieu d'arrivée" searchIcon="location" (ionChange)="updateSearbarLocation($event)" [color]="addressesTo.length == 0 && selectedAddressTo ? 'primary' : ''" [value]="selectedAddressTo" debounce="500"></ion-searchbar>
+    <ion-searchbar id="searchbar-location-to" placeholder="{{ 'add-move.to' | translate }}" searchIcon="location" (ionChange)="updateSearbarLocation($event)" [color]="addressesTo.length == 0 && selectedAddressTo ? 'primary' : ''" [value]="selectedAddressTo" debounce="500"></ion-searchbar>
     <div style="position: absolute; width: 100%; z-index: 999;">
       <ion-list lines="none" id="list-location-to" *ngIf="addressesTo.length > 0">
         <ion-item button *ngFor="let address of addressesTo" (click)="selectLocation($event, address.place_name, address.center)">
@@ -39,17 +39,17 @@
     </ion-item-divider>
 
     <ion-item>
-      <ion-label>Moyen de transport</ion-label>
+      <ion-label>{{ 'add-move.modeOfTransportation' | translate }}</ion-label>
       <ion-select id="moveType" (ionChange)="onChangeMoveType($event)">
-        <ion-select-option value="car">Voiture</ion-select-option>
-        <ion-select-option value="train">Train</ion-select-option>
-        <ion-select-option value="bus">Bus</ion-select-option>
-        <ion-select-option value="subway">Métro</ion-select-option>
-        <ion-select-option value="plane">Avion</ion-select-option>
-        <ion-select-option value="tramway">Tramway</ion-select-option>
-        <ion-select-option value="moto">Moto</ion-select-option>
-        <ion-select-option value="bike">Vélo</ion-select-option>
-        <ion-select-option value="walk">À pied</ion-select-option>
+        <ion-select-option value="car">{{ 'general.car' | translate }}</ion-select-option>
+        <ion-select-option value="train">{{ 'general.train' | translate }}</ion-select-option>
+        <ion-select-option value="bus">{{ 'general.bus' | translate }}</ion-select-option>
+        <ion-select-option value="subway">{{ 'general.subway' | translate }}</ion-select-option>
+        <ion-select-option value="plane">{{ 'general.plane' | translate }}</ion-select-option>
+        <ion-select-option value="tramway">{{ 'general.tramway' | translate }}</ion-select-option>
+        <ion-select-option value="moto">{{ 'general.moto' | translate }}</ion-select-option>
+        <ion-select-option value="bike">{{ 'general.bike' | translate }}</ion-select-option>
+        <ion-select-option value="walk">{{ 'general.byFoot' | translate }}</ion-select-option>
       </ion-select>
     </ion-item>
 
@@ -58,7 +58,7 @@
 
     <ion-item [disabled]="moveTypeElement.value != 'car'" text-left>
       <ion-input style="max-width: 20%;" size="1" id="nb-people" readonly slot="start" type="number" value="1" min="1" max="8"></ion-input>
-      <ion-label>{{ nbPeople > 1 ? 'personnes' : 'personne' }}</ion-label>
+      <ion-label>{{ (nbPeople > 1 ? 'add-move.people' : 'add-move.people') | translate }}</ion-label>
       <ion-button slot="end" (click)="removePerson()" [disabled]="toInt(nbPeopleEl.value) == toInt(nbPeopleEl.min)"><ion-icon slot="icon-only" name="remove"></ion-icon></ion-button>
       <ion-button slot="end" (click)="addPerson()" [disabled]="toInt(nbPeopleEl.value) == toInt(nbPeopleEl.max)"><ion-icon slot="icon-only" name="add"></ion-icon></ion-button>
     </ion-item>
@@ -68,23 +68,23 @@
   </ion-item-divider>
 
   <ion-chip color="danger" *ngIf="noRoute">
-    <ion-label>Aucun itinéraire n'a été trouvé.</ion-label>
+    <ion-label>{{ 'add-move.noRouteFound' | translate }}</ion-label>
   </ion-chip>
 
   <ion-card *ngIf="computedMove && !loading && !noRoute">
     <ion-grid>
       <ion-row class="ion-align-items-center">
         <ion-col class="text-left">
-          Distance<br />
+          {{ 'add-move.distance' | translate }}<br />
           <strong>{{computedMove.distance.toFixed(1)}} <small>km</small></strong>
         </ion-col>
         <ion-col class="text-left">
-            Impact<br />
+          {{ 'add-move.impact' | translate }}<br />
             <strong>{{(computedMove.CO2/nbPeople).toFixed(2)}} <small>kgCO2eq</small></strong>
         </ion-col>
         
         <ion-col class="text-left">
-            Durée<br />
+          {{ 'add-move.duration' | translate }}<br />
             <strong>{{computedMove.duration ? (computedMove.duration/60).toFixed(0) : '?'}} <small>mn</small></strong>
         </ion-col>
       </ion-row>

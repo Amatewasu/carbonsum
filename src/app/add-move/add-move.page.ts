@@ -183,7 +183,7 @@ export class AddMovePage implements OnInit {
         distance: distance,
         CO2: this.Ecology.computeCO2(distance, moveType)/1,
         mapURL: this.mapService.geometryToMapURL({ coordinates: [this.selectCoordsFrom, this.selectedCoordsTo] }),
-        duration: distance/AVG_SPEED_PLANE*60*60*1000,
+        duration: distance/AVG_SPEED_PLANE*60*60,
         type: moveType,
         coords: [this.selectCoordsFrom, this.selectedCoordsTo].reverse().join(" ")
       };
@@ -236,10 +236,11 @@ export class AddMovePage implements OnInit {
     let year = parseInt(this.yearID, 10);
     let month = parseInt(this.monthID, 10) - 1;
     let day = parseInt(this.dayID, 10);
-    let duration = this.computedMove.duration; 
+    let duration = this.computedMove.duration;
+    let random = Math.round(Math.random()*100);
     let move = {
-      begin: new Date((new Date(year, month, day, 12).getTime() - duration/2)).toString(), // we center the time around midday
-      end: new Date((new Date(year, month, day, 12).getTime() + duration/2)).toString(),
+      begin: new Date((new Date(year, month, day, 12).getTime() - duration*1000/2 - random)).toString(), // we center the time around midday
+      end: new Date((new Date(year, month, day, 12).getTime() + duration*1000/2 - random)).toString(),
 
       distance: this.computedMove.distance,
       CO2: this.computedMove.CO2/this.nbPeople,

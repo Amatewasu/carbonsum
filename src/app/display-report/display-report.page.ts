@@ -6,7 +6,9 @@ import { DataManagerService } from '../data-manager.service';
 import { EcologyToolsService } from '../ecology-tools.service';
 
 import { Chart } from "chart.js";
- 
+
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-display-report',
@@ -25,6 +27,11 @@ export class DisplayReportPage implements OnInit {
   
   year : number;
   month : number;
+
+  private previousYear: number;
+  private previousMonth: number;
+  private nextYear: number;
+  private nextMonth: number;
 
   notCompleteMonth : Boolean = false;
 
@@ -48,7 +55,7 @@ export class DisplayReportPage implements OnInit {
   daysName = [];
   daysCO2 = [];
 
-  constructor(private route: ActivatedRoute, private dataManager : DataManagerService, private Ecology : EcologyToolsService) {
+  constructor(private route: ActivatedRoute, private dataManager : DataManagerService, private Ecology : EcologyToolsService, private socialSharing: SocialSharing, private translate: TranslateService) {
   }
 
   ngOnInit() {
@@ -58,7 +65,14 @@ export class DisplayReportPage implements OnInit {
     this.year = parseInt(this.yearID, 10);
     this.month = parseInt(this.monthID, 10);
 
-    this.data = JSON.parse(localStorage.mapsData)[this.year.toString()][this.month.toString()];
+    this.computeNeighbourYearsAndMonths();
+
+    let mapsData = localStorage.mapsData ? JSON.parse(localStorage.mapsData) : {};
+    if (mapsData && mapsData[this.year.toString()] && mapsData[this.year.toString()][this.month.toString()]){
+      this.data = mapsData[this.year.toString()][this.month.toString()];
+    } else {
+      this.data = [];
+    }
 
     let i = 1;
     let date = new Date(this.year, this.month, 0);
@@ -104,13 +118,12 @@ export class DisplayReportPage implements OnInit {
 
   ionViewDidEnter() {
     this.createDayByDayChart();
-
-    setTimeout(() => {
-      this.generateSharingImage();
-    }, 100);
   }
 
   createDayByDayChart(){
+    let colorBg = "rgba(56, 128, 255, 0.2)";
+    let colorBorder = "rgba(56, 128, 255, 0.5)";
+
     this.dayByDayChart = new Chart(this.dayByDayCanvas.nativeElement, {
       type: "bar",
       data: {
@@ -119,18 +132,27 @@ export class DisplayReportPage implements OnInit {
           {
             label: "CO2 global (kg)",
             data: this.daysCO2,
-            backgroundColor: new Array(this.daysCO2.length).fill('rgba(255, 99, 132, 0.2)', 0, this.daysCO2.length),
-            borderColor: new Array(this.daysCO2.length).fill('rgba(255, 99, 132, 0.5)', 0, this.daysCO2.length),
+            backgroundColor: new Array(this.daysCO2.length).fill(colorBg, 0, this.daysCO2.length),
+            borderColor: new Array(this.daysCO2.length).fill(colorBorder, 0, this.daysCO2.length),
             borderWidth: 1
           }
         ]
-        
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            display: true,
+            ticks: {
+              suggestedMin: 0
+            }
+          }]
+        }
       }
     });
   }
 
   computeMonthObjective(){
-		let yearlyObjective = parseFloat(localStorage.yearlyObjective) || this.Ecology.CO2table.stats.FR.totalPerYearPerPersonTransport;
+		let yearlyObjective = this.Ecology.getObjectiveTransport();
 		let sumCO2month = this.monthReport.sumCO2;
 
 		let co2PerDayPeriod = sumCO2month/this.monthReport.nbDaysSync;
@@ -141,25 +163,60 @@ export class DisplayReportPage implements OnInit {
 		console.log("[computeMonthObjective] sumCO2month:", sumCO2month, "co2PerDayPeriod:", co2PerDayPeriod, "projectedYearlyCO2:", projectedYearlyCO2, "yearlyObjective:", yearlyObjective);
   }
   
-  loadLogo(){
+  loadImage(src: string){
     return new Promise(resolve => {
-      let logo = new Image();
-      logo.onload = () => {
-        resolve(logo);
+      let img = new Image();
+      img.onload = () => {
+        resolve(img);
       };
-      logo.src = '/assets/icon/logo-carbonsum.png';
+      img.src = src;
     });
   }
 
-  async generateSharingImage(){
+  async shareReport(){
+    let data = {
+      month: this.translate.instant('general.monthsName.'+ this.month),
+      year: this.year,
+      totalImpact: this.monthReport.sumCO2, // kgCO2e
+      nbMoves: this.monthReport.movesData.nb,
+      nbMovesLowImpact: this.monthReport.movesData.good,
+      nbMovesMediumImpact: this.monthReport.movesData.medium,
+      nbMovesHighImpact: this.monthReport.movesData.bad
+    };
+
+    let img = await this.generateSharingImage(data);
+
+    let options = {
+      files: [img],
+      message: this.translate.instant('display-report.social-sharing.message'),
+      url: "https://getcarbonsum.app"
+    };
+
+    const onSuccess = (result) => {
+      console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+      console.log("Shared to app: " + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+    };
+    const onError = (msg) => {
+      console.log("Sharing failed with message: " + msg);
+    };
+
+    this.socialSharing.shareWithOptions(options)
+      .then(onSuccess)
+      .catch(onError)
+    ;
+  }
+
+  async generateSharingImage(data){
     const W = 1080; // px
     const H = 1080; // px
     const goodColor = "#00DC91";
     const mediumColor = "#FFA700";
     const badColor = "#F55434";
+    const greyColor = "grey";
     const bgColor = "#00A9FA";
 
-    let logo : any = await this.loadLogo();
+    let logo : any = await this.loadImage('/assets/icon/logo-carbonsum.png');
+    let bg : any = await this.loadImage('/assets/images/bg_social-sharing.jpg');
 
     let canvas = document.createElement("canvas");
     canvas.width = W;
@@ -168,108 +225,128 @@ export class DisplayReportPage implements OnInit {
     let ctx = canvas.getContext("2d");
 
     // draw the background
-    ctx.fillStyle = bgColor; // background color
-    ctx.fillRect(0, 0, W, H);
-
-    // draw the corner
-    ctx.fillStyle = "white";
-    let cornerSize = 0.4;
-    ctx.beginPath();
-    ctx.moveTo(W, H); // right bottom corner
-    ctx.lineTo(W, H - Math.round(H*cornerSize));
-    ctx.lineTo(W - Math.round(W*cornerSize), H);
-    ctx.lineTo(W, H);
-    ctx.fill();
-
-    // draw the logo
-    ctx.drawImage(logo, W-200-30, H-140-30);
+    ctx.drawImage(bg, 0, 0);
 
     // draw the month name
-    ctx.fillStyle = "white";
-    ctx.font = '80px "Arial Black", Gadget, sans-serif';
-    ctx.textAlign = "right";
-    ctx.fillText('Septembre', W - 100, 100);
-    ctx.fillText('2020', W - 100, 100+100);
+    ctx.fillStyle = "black";
+    ctx.font = 'bold 40px Helvetica, Gadget, sans-serif';
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillText(data.month +" "+ data.year, 125, 297);
+    ctx.textBaseline = "alphabetic";
 
     // draw the circle
-    let radius = 200; // px
-    let partGood = 1/3;
-    let partMedium = 1/3;
-    let partBad = 1/3;
-    let centerCircle = { x: W/2, y: H/2 };
+    let radius = 170; // px
+    let partGood = data.nbMoves ? data.nbMovesLowImpact/data.nbMoves : 0;
+    let partMedium = data.nbMoves ? data.nbMovesMediumImpact/data.nbMoves : 0;
+    let partBad = data.nbMoves ? data.nbMovesHighImpact/data.nbMoves : 0;
+    let centerCircle = { x: 361, y: 625 };
     let offsetAngle = -Math.PI/2;
-    ctx.lineWidth = 20; // px
+    ctx.lineWidth = 35; // px
     ctx.strokeStyle = goodColor;
-    ctx.beginPath();
-    ctx.arc(centerCircle.x, centerCircle.y, radius, offsetAngle+0, offsetAngle+2*Math.PI*partGood);
-    ctx.stroke();
-    ctx.strokeStyle = mediumColor;
-    ctx.beginPath();
-    ctx.arc(centerCircle.x, centerCircle.y, radius, offsetAngle+2*Math.PI*partGood, offsetAngle+2*Math.PI*(partGood+partMedium));
-    ctx.stroke();
-    ctx.strokeStyle = badColor;
-    ctx.beginPath();
-    ctx.arc(centerCircle.x, centerCircle.y, radius, offsetAngle+2*Math.PI*(partGood+partMedium), offsetAngle+2*Math.PI);
-    ctx.stroke();
+    if (data.nbMoves){
+      ctx.beginPath();
+      ctx.arc(centerCircle.x, centerCircle.y, radius, offsetAngle+0, offsetAngle+2*Math.PI*partGood);
+      ctx.stroke();
+      ctx.strokeStyle = mediumColor;
+      ctx.beginPath();
+      ctx.arc(centerCircle.x, centerCircle.y, radius, offsetAngle+2*Math.PI*partGood, offsetAngle+2*Math.PI*(partGood+partMedium));
+      ctx.stroke();
+      ctx.strokeStyle = badColor;
+      ctx.beginPath();
+      ctx.arc(centerCircle.x, centerCircle.y, radius, offsetAngle+2*Math.PI*(partGood+partMedium), offsetAngle+2*Math.PI);
+      ctx.stroke();
+    } else {
+      ctx.strokeStyle = greyColor;
+      ctx.beginPath();
+      ctx.arc(centerCircle.x, centerCircle.y, radius, 0, 2*Math.PI);
+      ctx.stroke();
+    }
 
     // draw the number of moves
-    ctx.fillStyle = "white";
-    ctx.font = '35px bold "Arial Black", Gadget, sans-serif';
+    ctx.fillStyle = "black";
+    ctx.font = 'bold 50px Helvetica, Gadget, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('126', Math.round(W/2), Math.round(H/2)-30);
-    ctx.font = '35px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('déplacements', Math.round(W/2), Math.round(H/2)+30);
+    ctx.fillText(data.nbMoves, centerCircle.x, centerCircle.y-30);
+    ctx.font = '35px Helvetica, Gadget, sans-serif';
+    ctx.fillStyle = "#656668";
+    ctx.fillText(this.translate.instant('display-report.moves'), centerCircle.x, centerCircle.y+30);
     ctx.textBaseline = 'alphabetic';
 
     // draw the legend
     // the indicators first
-    let xLegend = 50; // px
-    ctx.lineWidth = 10; // px
+    let xLegend = 655; // px
+    let barLength = 80; // px
+    let spaceBars = 150; // px
+    ctx.lineWidth = 13; // px
     ctx.lineCap = 'round';
     ctx.strokeStyle = goodColor;
     ctx.beginPath();
-    ctx.moveTo(xLegend, 100);
-    ctx.lineTo(xLegend, 100+50);
+    ctx.moveTo(xLegend, centerCircle.y - spaceBars - barLength/2);
+    ctx.lineTo(xLegend, centerCircle.y - spaceBars + barLength/2);
     ctx.stroke();
     ctx.strokeStyle = mediumColor;
     ctx.beginPath();
-    ctx.moveTo(xLegend, 200);
-    ctx.lineTo(xLegend, 200+50);
+    ctx.moveTo(xLegend, centerCircle.y - barLength/2);
+    ctx.lineTo(xLegend, centerCircle.y + barLength/2);
     ctx.stroke();
     ctx.strokeStyle = badColor;
     ctx.beginPath();
-    ctx.moveTo(xLegend, 300);
-    ctx.lineTo(xLegend, 300+50);
+    ctx.moveTo(xLegend, centerCircle.y + spaceBars - barLength/2);
+    ctx.lineTo(xLegend, centerCircle.y + spaceBars + barLength/2);
     ctx.stroke();
     ctx.lineCap = 'butt';
     // and then the associated text
+    let spaceTextBar = 20; // px
     ctx.textAlign = 'left';
-    ctx.font = 'bold 25px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('42', xLegend+20, 125);
-    ctx.font = '15px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('impact faible', xLegend+20, 150);
+    ctx.font = 'bold 30px Helevtica, Gadget, sans-serif';
+    ctx.fillText(data.nbMovesLowImpact, xLegend+spaceTextBar, centerCircle.y - spaceBars - 10);
+    ctx.font = '25px Helvetica, Gadget, sans-serif';
+    ctx.fillText(this.translate.instant('display-report.social-sharing.lowImpact'), xLegend+spaceTextBar, centerCircle.y - spaceBars + 25);
 
-    ctx.font = 'bold 25px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('42', xLegend+20, 225);
-    ctx.font = '15px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('impact modéré', xLegend+20, 250);
+    ctx.font = 'bold 30px Helvetica, Gadget, sans-serif';
+    ctx.fillText(data.nbMovesMediumImpact, xLegend+spaceTextBar, centerCircle.y - 10);
+    ctx.font = '25px Helvetica, Gadget, sans-serif';
+    ctx.fillText(this.translate.instant('display-report.social-sharing.mediumImpact'), xLegend+spaceTextBar, centerCircle.y + 25);
 
-    ctx.font = 'bold 25px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('42', xLegend+20, 325);
-    ctx.font = '15px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('impact important', xLegend+20, 350);
+    ctx.font = 'bold 30px Helvetica, Gadget, sans-serif';
+    ctx.fillText(data.nbMovesHighImpact, xLegend+spaceTextBar, centerCircle.y + spaceBars - 10);
+    ctx.font = '25px Helvetica, Gadget, sans-serif';
+    ctx.fillText(this.translate.instant('display-report.social-sharing.highImpact'), xLegend+spaceTextBar, centerCircle.y + spaceBars + 25);
 
     // let's draw the total impact
-    ctx.fillStyle = "white";
-    ctx.font = '80px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('346', xLegend, H-200+100);
-    ctx.font = '40px "Arial Black", Gadget, sans-serif';
-    ctx.fillText('kgCO2e', xLegend, H-150+100);
+    ctx.fillStyle = "black";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "right";
+    ctx.font = 'bold 40px Helvetica, Gadget, sans-serif';
+    ctx.fillText(data.totalImpact.toFixed(0), 815, 297);
+    ctx.textAlign = "left";
+    ctx.font = '40px Helvetica, Gadget, sans-serif';
+    ctx.fillText(this.translate.instant('display-report.social-sharing.kgCO2e'), 815, 297);
+    ctx.textBaseline = "alphabetic";
 
     console.log(canvas.toDataURL());
 
     return canvas.toDataURL();
+  }
+
+  computeNeighbourYearsAndMonths(){
+    if (this.month > 0){ // i.e. it's not january
+      this.previousMonth = this.month - 1;
+      this.previousYear = this.year;
+    } else { // i.e. it's january
+      this.previousMonth = 11; // december
+      this.previousYear = this.year - 1;
+    }
+
+    if (this.month < 11){ // i.e. it's not december
+      this.nextMonth = this.month + 1;
+      this.nextYear = this.year;
+    } else { // i.e. it's december
+      this.nextMonth = 0; // january
+      this.nextYear = this.year + 1;
+    }
   }
 
 }

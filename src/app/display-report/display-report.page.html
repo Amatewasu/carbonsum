@@ -1,13 +1,14 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/" text="{{ 'general.back' | translate }}"></ion-back-button>
+      <!--<ion-back-button defaultHref="/" text="{{ 'general.back' | translate }}"></ion-back-button>-->
+      <ion-back-button defaultHref="/" text="" href="/"></ion-back-button>
     </ion-buttons>
 
-    <ion-title>{{ 'general.report' | translate }} {{ 'general.monthsName.'+ month | translate }} {{ year }}</ion-title>
+    <ion-title>{{ 'display-report.monthlyReport' | translate }}</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button icon-only>
+      <ion-button icon-only (click)="shareReport()">
         <ion-icon name="share-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -15,11 +16,21 @@
 </ion-header>
 
 <ion-content style="overflow-y: scroll;">
+  <ion-toolbar class="toolbar-choose-month">
+    <ion-buttons slot="start" routerLink="/display-report/{{previousYear}}/{{previousMonth}}" routerDirection="back" replaceUrl="true">
+      <ion-icon name="chevron-back" slot="icon-only"></ion-icon>
+    </ion-buttons>
+    <ion-title>{{ 'general.monthsName.'+ month | translate }} {{ year }}</ion-title>
+    <ion-buttons slot="end" replaceUrl="true" routerLink="/display-report/{{nextYear}}/{{nextMonth}}">
+      <ion-icon name="chevron-forward" slot="icon-only"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+
   <ion-card class="smallreport-card" *ngIf="notCompleteMonth" color='warning'>
     <ion-card-content>
-      Ce mois n'a pas été totalement synchronisé, le rapport est donc incomplet.
+      {{ 'display-report.monthNotFullySync' | translate }}
       <span *ngIf="month == currentMonth && year == currentYear">
-        C'est normal dans la mesure où ce rapport reflète le mois courant, qui n'est pas encore finalisé.
+        {{ 'display-report.butItsCurrentMonth' | translate }}
       </span>
     </ion-card-content>
   </ion-card>
@@ -30,18 +41,18 @@
             <!-- good -->
             <stop offset="0%" stop-color="rgb(0, 226, 154)"></stop>
             <stop offset="100%" stop-color="rgb(0, 169, 250)"></stop>
-        </linearGradient>
-        <linearGradient id="linearColors-middle" x1="0" y1="0" x2="1" y2="1">
-          <!-- middle: #F5B600 -> #72E300 -->
-          <stop offset="0%" stop-color="#72E300"></stop>
-          <stop offset="100%" stop-color="#F5B600"></stop>
-      </linearGradient>
-      <linearGradient id="linearColors-bad" x1="0" y1="0" x2="1" y2="1">
-        <!-- bad : #F5B600 -> #E30000 -->
-        <stop offset="0%" stop-color="#E30000"></stop>
-        <stop offset="100%" stop-color="#F5B600"></stop>
-    </linearGradient>
-        
+          </linearGradient>
+          <linearGradient id="linearColors-middle" x1="0" y1="0" x2="1" y2="1">
+            <!-- middle: #F5B600 -> #72E300 -->
+            <stop offset="0%" stop-color="#72E300"></stop>
+            <stop offset="100%" stop-color="#F5B600"></stop>
+          </linearGradient>
+          <linearGradient id="linearColors-bad" x1="0" y1="0" x2="1" y2="1">
+            <!-- bad : #F5B600 -> #E30000 -->
+            <stop offset="0%" stop-color="#E30000"></stop>
+            <stop offset="100%" stop-color="#F5B600"></stop>
+          </linearGradient>
+          
 
           <circle class="circle-report" cx="50" cy="50" r="45" attr.stroke="url(#linearColors-{{ monthObjectiveMood }})" attr.stroke-dashoffset="{{ monthReport ? (2*3.141592*45) * (1 - monthReport.nbDaysSync/monthReport.nbDays) : (2*3.141592*45) }}"  />
           <circle class="circle-report-bg" cx="50" cy="50" r="45"  />
@@ -93,13 +104,13 @@
   <ion-card class="smallreport-card">
     <ion-card-content>
       <h1>{{sumCO2.toFixed(1)}} kg</h1>
-      d'équivalent CO2 émis en conséquence de vos déplacements en {{monthsName[month].toLowerCase()}} {{year}}
+      {{ 'display-report.consequenceOfMove' | translate }}<!-- en {{monthsName[month].toLowerCase()}} {{year}} -->
 
       <ion-list>
         <ion-item>
           <ion-icon name="car" slot="end"></ion-icon>
           <ion-label class="ion-text-wrap">
-              dont {{sumCar.toFixed(1)}} kg lié<span *ngIf="sumCar > 1">s</span> à vos déplacement en voiture
+              {{ 'display-report.including' | translate }} {{sumCar.toFixed(1)}} kg {{ 'display-report.relatedToYourMoves' | translate }} {{ 'general.car' | translate | lowercase }}
               <ion-progress-bar [value]="sumCar/sumCO2"></ion-progress-bar>
           </ion-label>
         </ion-item>
@@ -107,7 +118,7 @@
         <ion-item *ngIf="sumPlane > 0.0">
           <ion-icon name="airplane" slot="end"></ion-icon>
           <ion-label class="ion-text-wrap">
-              dont {{sumPlane.toFixed(1)}} kg lié<span *ngIf="sumPlane > 1">s</span> à vos déplacement en avion
+            {{ 'display-report.including' | translate }} {{sumPlane.toFixed(1)}} kg {{ 'display-report.relatedToYourMoves' | translate }} {{ 'general.plane' | translate | lowercase }}
               <ion-progress-bar [value]="sumPlane/sumCO2"></ion-progress-bar>
           </ion-label>
         </ion-item>
@@ -115,7 +126,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card class="smallreport-card" *ngIf="!notCompleteMonth" [color]="percentageMoreThanAvgFrenchPerson > 1 ? 'danger' : 'success'">
+  <ion-card class="smallreport-card" *ngIf="!notCompleteMonth && 0" [color]="percentageMoreThanAvgFrenchPerson > 1 ? 'danger' : 'success'">
     <ion-card-content>
       C'est
       <h1>
@@ -126,44 +137,45 @@
       <span *ngIf="percentageMoreThanAvgFrenchPerson < 1">:)</span>
     </ion-card-content>
   </ion-card>
-    <ion-card class="funny-fact-card">
-      <ion-card-content *ngIf="funnyFact === 0">
-        C'est
-        <h1>
-          {{(sumCO2/6.90).toFixed(1)}}
-        </h1>
-        fois ce que pète une vache chaque jour.
-        <p><small>On estime en effet qu'une vache emet environ 90 kg de méthane (CH4) par an.</small></p>
-        <!-- source: https://www.agrireseau.net/agroenvironnement/documents/chouinard.pdf --> 
-      </ion-card-content>
+  
+  <ion-card class="funny-fact-card" *ngIf="0">
+    <ion-card-content *ngIf="funnyFact === 0">
+      C'est
+      <h1>
+        {{(sumCO2/6.90).toFixed(1)}}
+      </h1>
+      fois ce que pète une vache chaque jour.
+      <p><small>On estime en effet qu'une vache emet environ 90 kg de méthane (CH4) par an.</small></p>
+      <!-- source: https://www.agrireseau.net/agroenvironnement/documents/chouinard.pdf --> 
+    </ion-card-content>
 
-      <ion-card-content *ngIf="funnyFact === 1">
-        C'est
-        <h1>
-          {{(sumCO2/1000*534).toFixed(1)}}
-        </h1>
-        m<sup>3</sup> de CO<sub>2</sub> à 15°C.
-        <!-- source: https://www.consoglobe.com/represente-tonne-c02-4127-cg --> 
-      </ion-card-content>
+    <ion-card-content *ngIf="funnyFact === 1">
+      C'est
+      <h1>
+        {{(sumCO2/1000*534).toFixed(1)}}
+      </h1>
+      m<sup>3</sup> de CO<sub>2</sub> à 15°C.
+      <!-- source: https://www.consoglobe.com/represente-tonne-c02-4127-cg --> 
+    </ion-card-content>
 
-      <ion-card-content *ngIf="funnyFact === 2">
-        C'est
-        <h1>
-          {{(sumCO2/7.84*1000).toFixed(1)}}
-        </h1>
-        smartphones rechargés.
-        <!-- source: https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references#smartphones --> 
-      </ion-card-content>
+    <ion-card-content *ngIf="funnyFact === 2">
+      C'est
+      <h1>
+        {{(sumCO2/7.84*1000).toFixed(1)}}
+      </h1>
+      smartphones rechargés.
+      <!-- source: https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references#smartphones --> 
+    </ion-card-content>
 
-      <ion-card-content *ngIf="funnyFact === 3">
-        C'est ce qu'absorbent
-        <h1>
-          {{(sumCO2/(25/12)).toFixed(1)}}
-        </h1>
-        arbres en CO2 sur la période.
-        <p><small>On estime en effet qu'un arbre commun absorbe entre 20 et 30 kg de CO2 par an.</small></p>
-        
-      </ion-card-content>
+    <ion-card-content *ngIf="funnyFact === 3">
+      C'est ce qu'absorbent
+      <h1>
+        {{(sumCO2/(25/12)).toFixed(1)}}
+      </h1>
+      arbres en CO2 sur la période.
+      <p><small>On estime en effet qu'un arbre commun absorbe entre 20 et 30 kg de CO2 par an.</small></p>
+      
+    </ion-card-content>
   </ion-card>
 
   <ion-card>

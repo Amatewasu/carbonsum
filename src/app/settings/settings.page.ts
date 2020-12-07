@@ -8,6 +8,8 @@ const { Storage } = Plugins;
 
 import { TranslateService } from '@ngx-translate/core';
 
+import { EcologyToolsService } from '../ecology-tools.service';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
@@ -22,7 +24,12 @@ export class SettingsPage implements OnInit {
   private todayUSFormat : string;
   private synchronizeUntil : string;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, private translateService: TranslateService) {
+  private objectiveYear: number = 2020;
+  private objectiveCO2 : number = 0;
+
+  private currentYear : number = new Date().getFullYear();
+
+  constructor(changeDetectorRef: ChangeDetectorRef, private translateService: TranslateService, private Ecology: EcologyToolsService) {
     this.changeDetectorRef = changeDetectorRef;
     this.language = this.translateService.currentLang;
     console.log("current lang",  this.translateService.currentLang);
@@ -31,6 +38,11 @@ export class SettingsPage implements OnInit {
     this.todayUSFormat = now.getFullYear() +"-"+ (now.getMonth()+1) +"-"+ now.getDate();
 
     this.synchronizeUntil = localStorage.synchronizeUntil || "2020-01-01";
+
+    this.objectiveYear = localStorage.objectiveYear ? parseInt(localStorage.objectiveYear, 10) : this.currentYear;
+    this.objectiveCO2 = localStorage.objectiveCO2 ? parseInt(localStorage.objectiveCO2, 10) : this.Ecology.objectiveYearToCO2(this.currentYear);
+
+    console.log(this.objectiveYear, this.objectiveCO2);
   }
 
   ngOnInit() {
@@ -63,4 +75,10 @@ export class SettingsPage implements OnInit {
     localStorage.synchronizeUntil = this.synchronizeUntil;
   }
 
+  updateobjectiveCO2(){
+    this.objectiveCO2 = Math.round(this.Ecology.objectiveYearToCO2(this.objectiveYear));
+
+    localStorage.objectiveCO2 = this.objectiveCO2;
+    localStorage.objectiveYear = this.objectiveYear;
+  }
 }

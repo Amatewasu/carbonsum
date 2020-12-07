@@ -1,10 +1,14 @@
 p {
-    padding: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 .social-icons a {
     text-decoration: none;
     color: black;
+
+    padding: 10px;
+    opacity: .7;
 }
 .social-icons a:visited {
     text-decoration: none;

@@ -18,8 +18,16 @@
   </ion-card>
 
   <p class="social-icons" style="text-align: center;">
+    <a href="https://twitter.com/carbonsum_app/" target="_blank">
+      <ion-icon size="large" name="logo-twitter"></ion-icon>
+    </a>
+
     <a href="https://www.instagram.com/carbonsum/" target="_blank">
       <ion-icon size="large" name="logo-instagram"></ion-icon>
+    </a>
+
+    <a href="https://www.facebook.com/groups/403864357665295/" target="_blank">
+      <ion-icon size="large" name="logo-facebook"></ion-icon>
     </a>
   </p>
 
@@ -29,6 +37,21 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
+        <ion-item>
+          <ion-label position="floating">{{ 'settings.objective' | translate }} ({{ 'settings.year' | translate }})</ion-label>
+          <ion-range min="{{ currentYear }}" max="2100" pin [(ngModel)]="objectiveYear" (ionChange)="updateobjectiveCO2()">
+            <ion-label slot="start">{{ currentYear }}</ion-label>
+            <ion-label slot="end">2100</ion-label>
+          </ion-range>
+
+          <div style="margin: auto; text-align: center;">
+            <h1>{{ objectiveCO2 }}</h1> kgCO2e
+          </div>
+          <p style="text-align: justify; color: grey;">
+            {{ 'settings.explanationObjective' | translate }}
+          </p>
+        </ion-item>
+
         <ion-item>
           <ion-label position="floating">{{ 'settings.synchronizeUntil' | translate }}</ion-label>
           <ion-datetime displayFormat="YYYY-MM-DD" min="2010-01-01" [max]="todayUSFormat" [value]="synchronizeUntil" (ionChange)="updateSynchronizeUntil($event)"></ion-datetime>
@@ -61,7 +84,13 @@
       <ion-card-title>{{ 'settings.ADVANCED_SETTINGS' | translate }}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-button size="small" expand="block" class="small-padding" target="_blank" href="mailto:alexis@delrieu.me?subject=CarbonSum%20-%20Report%20a%20bug&body=Hi%20Alexis">
+      <ion-button size="small" expand="block" class="small-padding" target="_blank" routerLink="/help">
+        {{ 'settings.helpPage' | translate }}
+      </ion-button>
+
+      <hr>
+
+      <ion-button size="small" expand="block" class="small-padding" target="_blank" href="mailto:alexis@getcarbonsum.app?subject=CarbonSum%20-%20Report%20a%20bug&body=Hi%20Alexis">
         {{ 'settings.reportABug' | translate }}
       </ion-button>
 

@@ -43,7 +43,11 @@ export class EcologyToolsService {
     stats: {
       FR: {
         totalPerYearPerPerson: 11190.9, // kgCO2eq
-        totalPerYearPerPersonTransport: 2669.61 // kgCO2eq, https://www.statistiques.developpement-durable.gouv.fr/chiffres-cles-du-climat-france-europe-et-monde-edition-2020-0
+        totalPerYearPerPersonTransport: 2670, // kgCO2eq, https://www.statistiques.developpement-durable.gouv.fr/chiffres-cles-du-climat-france-europe-et-monde-edition-2020-0
+        
+        objective2C2100: 2.1*1000, // kgCO2eq/an
+        ratioTransport: 0.25, // 25%, totalPerYearPerPersonTransport/totalPerYearPerPerson = 0.25
+        objective2C2100Transport: 525 // kgCO2eq, objective2C2100*ratioTransport
       }
     }
   };
@@ -64,8 +68,8 @@ export class EcologyToolsService {
   public thresholdMediumEmissionFactor = 0.052; // kgCO2eq
 
   constructor() {
-    if (!localStorage.yearlyGoal){
-      localStorage.yearlyGoal = this.CO2table.stats.FR.totalPerYearPerPersonTransport;
+    if (!localStorage.objectiveCO2){
+      localStorage.objectiveCO2 = Math.round(this.getObjectiveTransport());
     }
   }
 
@@ -273,5 +277,24 @@ export class EcologyToolsService {
     console.log(moves, res);
 
     return res;
+  }
+
+  objectiveYearToCO2 (year : number){
+    if (year > 2100){
+      return 0;
+    } else if (year < 2020) {
+      return this.CO2table.stats.FR.totalPerYearPerPersonTransport;
+    }
+
+    return this.CO2table.stats.FR.totalPerYearPerPersonTransport - (this.CO2table.stats.FR.totalPerYearPerPersonTransport - this.CO2table.stats.FR.objective2C2100Transport)/(2100-2020)*(year-2020);
+  }
+
+  getObjectiveTransport (){
+    let objCO2Str = localStorage.objectiveCO2;
+    if (objCO2Str){
+      return parseInt(objCO2Str, 10);
+    } else {
+      return Math.round(this.objectiveYearToCO2(new Date().getFullYear()));
+    }
   }
 }

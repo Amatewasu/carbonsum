@@ -105,7 +105,7 @@ export class HomePage {
 
   googleLogInHidden : boolean = false;
 
-  
+  private subscriptionLogIn;
 
   constructor(private router: Router, private iab: InAppBrowser, private iabDL: InAppBrowser, public platform: Platform, changeDetectorRef: ChangeDetectorRef, private mapService: MapService, private Ecology: EcologyToolsService, private dataManager: DataManagerService) {
 	// let's check if the user saw the tutorial slides
@@ -135,12 +135,12 @@ export class HomePage {
   }
 
   ngOnInit(){
-	this.dataManager.onLogIn.subscribe(() => {
+	this.subscriptionLogIn = this.dataManager.onLogIn.subscribe(() => {
 		this.logged = true;
 	});
   }
   ngOnDestroy(){
-    this.dataManager.onLogIn.unsubscribe();
+    this.subscriptionLogIn.unsubscribe();
   }
 
 
@@ -229,7 +229,7 @@ export class HomePage {
 	}
 
 	computeCurrentMonthObjective(){
-		let yearlyObjective = parseFloat(localStorage.yearlyObjective) || this.Ecology.CO2table.stats.FR.totalPerYearPerPersonTransport;
+		let yearlyObjective = this.Ecology.getObjectiveTransport();
 		let sumCO2currentMonth = this.currentMonthReport.sumCO2;
 
 		let co2PerDayPeriod = sumCO2currentMonth/this.currentMonthReport.nbDaysSync;

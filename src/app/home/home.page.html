@@ -10,7 +10,7 @@
 </ion-header>-->
 
 <ion-content>
-  
+  <ion-progress-bar class="negative-margin-bottom" [value]="dataManager.remainingSyncTimePercent" [buffer]="dataManager.remainingSyncTimePercent < 0.9 ? dataManager.remainingSyncTimePercent+0.1 : dataManager.remainingSyncTimePercent" *ngIf="dataManager.syncing" color="secondary"></ion-progress-bar>
 
   <h1 class="dashboard-title">
     Dashboard
@@ -28,17 +28,17 @@
     <ion-card-header>
       <ion-card-title>
         <ion-icon name="close-outline" class="close-card" (click)="hideGoogleLogIn()"></ion-icon>
-        Synchronisez votre compte Google
+        {{ 'home.syncGoogleAccount' | translate }}
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <p>
-        Vous n'êtes actuellement pas connecté à votre google Google. En vous y connectant, vos trajets seront automatiquement comptabilisés.
+        {{ 'home.currentlyNotConnected' | translate }}
       </p>
       <div class="center-max-width">
         <ion-button expand="block" color="light" class="connection-google" (click)="clickGoogleButton()">
           <ion-icon src="/assets/images/google.svg"></ion-icon>
-          Se connecter avec Google
+          {{ 'home.connectWithGoogle' | translate }}
         </ion-button>
       </div>
     </ion-card-content>
@@ -91,7 +91,7 @@
       </p>
     </ion-card-content>
   </ion-card>
-
+  <!--
   <ion-card>
     <ion-card-header>
       <ion-card-title>
@@ -107,17 +107,18 @@
       </p>
     </ion-card-content>
   </ion-card>
+  -->
 
-  <ion-card routerLink="/infos">
+  <ion-card routerLink="/infos" class="readMore">
     <ion-card-header>
       <ion-card-title>
-        En savoir plus
-        <!--<ion-icon name="chevron-forward"></ion-icon>-->
+        {{ 'home.knowMore' | translate }}
+        <ion-icon name="chevron-forward"></ion-icon>
       </ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <p>
-        Comment CarbonSum génère vos rapports ?
+        {{ 'home.knowMoreText1' | translate }}
       </p>
     </ion-card-content>
   </ion-card>

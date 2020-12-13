@@ -266,11 +266,11 @@ export class EcologyToolsService {
     for (let move of moves){
       let factorEmission = this.getFactorEmissionMove(move);
       if (factorEmission > this.thresholdHighEmissionFactor){
-        res.good++;
+        res.bad++;
       } else if (factorEmission > this.thresholdMediumEmissionFactor){
         res.medium++;
       } else {
-        res.bad++;
+        res.good++;
       }
     }
 

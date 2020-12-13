@@ -31,4 +31,8 @@ export class IntroPage implements OnInit {
     localStorage.introSeen = true;
     this.router.navigateByUrl('/home');
   }
+
+  clickGoogleButton(){
+		this.dataManager.logIn();
+	}
 }

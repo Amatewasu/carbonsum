@@ -120,8 +120,10 @@ export class DataManagerService {
       console.log("BROWSER - ignoring testGoogleConnection");
       return;
     }
+
+    let iabOptions = "location=no,hidden=yes";
   
-    var iabRef = this.iab.create(this.signInUrl, "_blank", "location=no,hidden=yes,hardwareback=no,hidenavigationbuttons=yes,zoom=no,fullscreen=no");
+    var iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
   
       iabRef.on('loadstart').subscribe(event => {
         var url = new URL(event.url);

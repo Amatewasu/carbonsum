@@ -101,7 +101,7 @@ export class HomePage {
   currentMonthObjectiveMood : string = "good";
 
   signInUrl : string = "https://accounts.google.com/signin/v2/identifier";
-  kmlUrl : string = "https://www.google.fr/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i{year}!2i{month}!3i{day}!2m3!1i{year}!2i{month}!3i{day}";
+  kmlUrl : string = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i{year}!2i{month}!3i{day}!2m3!1i{year}!2i{month}!3i{day}";
 
   googleLogInHidden : boolean = false;
 

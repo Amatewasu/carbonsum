@@ -44,7 +44,7 @@ export class DataManagerService {
   private iabRef;
   private iabDLRef;
   private signInUrl : string = "https://accounts.google.com/signin/v2/identifier";
-  private kmlUrl : string = "https://www.google.fr/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i{year}!2i{month}!3i{day}!2m3!1i{year}!2i{month}!3i{day}";
+  private kmlUrl : string = "https://www.google.com/maps/timeline/kml?authuser=0&pb=!1m8!1m3!1i{year}!2i{month}!3i{day}!2m3!1i{year}!2i{month}!3i{day}";
 
   @Output() onLogIn: EventEmitter<any> = new EventEmitter();
   @Output() onNewDaySync: EventEmitter<any> = new EventEmitter();
@@ -186,7 +186,7 @@ export class DataManagerService {
 
       if (this.logged){
         this.iabRef.hide();
-        this.iabDLRef = this.iab.create("https://www.google.fr/", "_blank", "EnableViewPortScale=yes,location=no,hidden=yes,hardwareback=no,hidenavigationbuttons=yes,zoom=no,fullscreen=no");
+        this.iabDLRef = this.iab.create("https://www.google.com/", "_blank", "EnableViewPortScale=yes,location=no,hidden=yes,hardwareback=no,hidenavigationbuttons=yes,zoom=no,fullscreen=no");
         
         //this.timeoutManagement.dateStartDownload = new Date();
         //this.timeoutManagement.downloaded = false;

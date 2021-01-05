@@ -409,7 +409,8 @@ export class DataManagerService {
           title: 'Stop'
         }],
         id: 42,
-        smallIcon: 'res://ic_stat_onesignal_default'
+        smallIcon: 'res://ic_stat_onesignal_default',
+        silent: true
       });
 
 			var that = this;

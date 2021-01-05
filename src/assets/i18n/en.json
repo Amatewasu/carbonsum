@@ -38,7 +38,8 @@
 
         "syncGoogleAccount": "Synchronize your Google account",
         "currentlyNotConnected": "You are currently not connected with your Google account. Once connected, your trips will be automatically synchronized.",
-        "connectWithGoogle": "Connect with Google"
+        "connectWithGoogle": "Connect with Google",
+        "last-30-days": "Last 30 days"
     },
 
     "menu": {

@@ -38,7 +38,8 @@
 
         "syncGoogleAccount": "Synchronisez votre compte Google",
         "currentlyNotConnected": "Vous n'êtes actuellement pas connecté à votre google Google. En vous y connectant, vos trajets seront automatiquement comptabilisés.",
-        "connectWithGoogle": "Se connecter avec Google"
+        "connectWithGoogle": "Se connecter avec Google",
+        "last-30-days": "30 derniers jours"
     },
 
     "menu": {

@@ -4,7 +4,7 @@ import { Plugins } from '@capacitor/core';
 
 const { Storage } = Plugins;
 
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser/ngx';
 import { Platform } from '@ionic/angular';
 
 import { EcologyToolsService } from './ecology-tools.service';
@@ -121,7 +121,7 @@ export class DataManagerService {
       return;
     }
 
-    let iabOptions = "location=no,hidden=yes";
+    let iabOptions : InAppBrowserOptions = { location: "no", hidden: "yes" };
   
     var iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
   

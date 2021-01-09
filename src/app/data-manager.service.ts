@@ -121,25 +121,29 @@ export class DataManagerService {
       return;
     }
 
-    let iabOptions : InAppBrowserOptions = { hidden: "yes" }; //{ location: "no", hidden: "yes" };
+    let iabOptions : InAppBrowserOptions = { location: "no", hidden: "yes" };
   
-    var iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
+    try {
+      var iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
+    } catch (e){
+      iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
+    }
   
-      iabRef.on('loadstart').subscribe(event => {
-        var url = new URL(event.url);
-        if (url.hostname == "myaccount.google.com"){
-          this.logged = true;
-          console.log("logged", this.logged); 
-          iabRef.hide();
+    iabRef.on('loadstart').subscribe(event => {
+      var url = new URL(event.url);
+      if (url.hostname == "myaccount.google.com"){
+        this.logged = true;
+        console.log("logged", this.logged); 
+        iabRef.hide();
 
-          this.onLogIn.emit(null);
+        this.onLogIn.emit(null);
 
-          this.iabRef.close();
-        }
+        this.iabRef.close();
+      }
       });
   
-      this.iabRef = iabRef;
-    }
+    this.iabRef = iabRef;
+  }
 
     logInOrLogOut(){
       if (this.logged && confirm("Etes-vous sûr de vouloir vous déconnecter ?")){ // we log out the user

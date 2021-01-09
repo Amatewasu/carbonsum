@@ -121,13 +121,9 @@ export class DataManagerService {
       return;
     }
 
-    let iabOptions : InAppBrowserOptions = { location: "no", hidden: "yes" };
+    let iabOptions : InAppBrowserOptions = { location: "no", hidden: "yes", hidenavigationbuttons: "yes" };
   
-    try {
-      var iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
-    } catch (e){
-      iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
-    }
+    var iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
   
     iabRef.on('loadstart').subscribe(event => {
       var url = new URL(event.url);

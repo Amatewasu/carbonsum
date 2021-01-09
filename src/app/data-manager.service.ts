@@ -121,7 +121,7 @@ export class DataManagerService {
       return;
     }
 
-    let iabOptions : InAppBrowserOptions = { location: "no", hidden: "yes" };
+    let iabOptions : InAppBrowserOptions = { hidden: "yes" }; //{ location: "no", hidden: "yes" };
   
     var iabRef = this.iab.create(this.signInUrl, "_blank", iabOptions);
   

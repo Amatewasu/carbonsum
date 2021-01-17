@@ -95,6 +95,7 @@ export class HomePage {
 	date: ""
   };
 
+  last30DaysReport;
   currentMonthReport;
   currentMonth : number = new Date().getMonth();
   currentYear : number = new Date().getFullYear();
@@ -128,10 +129,14 @@ export class HomePage {
 	let today = new Date();
 	let startDateMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 	let endDateMonth = new Date(today.getFullYear(), today.getMonth()+1, 0)
-	this.currentMonthReport = this.dataManager.getReportBetween(startDateMonth, endDateMonth);
-	console.log(this.currentMonthReport);
+	//this.currentMonthReport = this.dataManager.getReportBetween(startDateMonth, endDateMonth);
+	//console.log(this.currentMonthReport);
 
-	this.computeCurrentMonthObjective();
+	let thirtyDaysBefore = new Date(new Date().setDate(today.getDate()-30));
+	this.last30DaysReport = this.dataManager.getReportBetween(thirtyDaysBefore, today);
+
+	//this.computeCurrentMonthObjective();
+	this.computeLast30daysObjective();
   }
 
   ngOnInit(){
@@ -238,6 +243,17 @@ export class HomePage {
 		this.currentMonthObjectiveMood = this.Ecology.yearlyObjectiveToText(projectedYearlyCO2, yearlyObjective);
 
 		console.log("[computeCurrentMonthObjective] sumCO2currentMonth:", sumCO2currentMonth, "co2PerDayPeriod:", co2PerDayPeriod, "projectedYearlyCO2:", projectedYearlyCO2, "yearlyObjective:", yearlyObjective);
+	}
+	computeLast30daysObjective(){
+		let yearlyObjective = this.Ecology.getObjectiveTransport();
+		let sumCO2Last30Days = this.last30DaysReport.sumCO2;
+
+		let co2PerDayPeriod = sumCO2Last30Days/this.last30DaysReport.nbDaysSync;
+		let projectedYearlyCO2 = co2PerDayPeriod*365;
+
+		this.currentMonthObjectiveMood = this.Ecology.yearlyObjectiveToText(projectedYearlyCO2, yearlyObjective);
+
+		console.log("[computeLast30daysObjective] sumCO2Last30Days:", sumCO2Last30Days, "co2PerDayPeriod:", co2PerDayPeriod, "projectedYearlyCO2:", projectedYearlyCO2, "yearlyObjective:", yearlyObjective);
 	}
 }
   

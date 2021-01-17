@@ -47,7 +47,7 @@
   <ion-card class="report-home" routerLink="/display-report/{{currentYear}}/{{currentMonth}}">
     <ion-card-header>
       <ion-card-title>
-        {{ 'general.report' | translate }} {{ 'general.monthsName.'+ currentMonth | translate }} {{ currentYear }}
+        {{ 'home.last-30-days' | translate }}
         <ion-icon name="chevron-forward"></ion-icon>
       </ion-card-title>
     </ion-card-header>
@@ -68,7 +68,7 @@
             <stop *ngIf="currentMonthObjectiveMood == 'bad'" offset="100%" stop-color="#F5B600"></stop>
         </linearGradient>
 
-          <circle class="circle-report" cx="50" cy="50" r="45" stroke="url(#linearColors)" attr.stroke-dashoffset="{{ currentMonthReport ? (2*3.141592*45) * (1 - currentMonthReport.nbDaysSync/currentMonthReport.nbDays) : (2*3.141592*45) }}"  />
+          <circle class="circle-report" cx="50" cy="50" r="45" stroke="url(#linearColors)" attr.stroke-dashoffset="{{ last30DaysReport ? (2*3.141592*45) * (1 - last30DaysReport.nbDaysSync/last30DaysReport.nbDays) : (2*3.141592*45) }}"  />
           <circle class="circle-report-bg" cx="50" cy="50" r="45"  />
           <!-- [stroke-dashoffset]='currentMonthReport ? (1-currentMonthReport.nbDaysSync/currentMonthReport.nbDays)*280 : 280' Math.PI * 50 * (360-angle) / 180.0-->
         </svg>
@@ -81,7 +81,7 @@
           <br />
           <span class="score-CO2-result">{{ 'general.reportStatus.'+ currentMonthObjectiveMood | translate }}</span>
           <br />
-          <span class="score-CO2-number" *ngIf="currentMonthReport">{{ (currentMonthReport.sumCO2).toFixed(1) }} kgCO2e</span>
+          <span class="score-CO2-number" *ngIf="last30DaysReport">{{ (last30DaysReport.sumCO2).toFixed(1) }} kgCO2e</span>
         </span>
     </ion-card-content>
 

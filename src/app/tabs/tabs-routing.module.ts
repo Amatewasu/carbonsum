@@ -28,6 +28,10 @@ const routes: Routes = [
       {
         path: 'display-report',
         loadChildren: () => import('../display-report/display-report.module').then(m => m.DisplayReportPageModule)
+      },
+      {
+        path: 'offset',
+        loadChildren: () => import('../offset/offset.module').then(m => m.OffsetPageModule)
       }
     ]
   },

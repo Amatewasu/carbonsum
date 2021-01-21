@@ -188,7 +188,7 @@ export class DataManagerService {
 
       if (this.logged){
         this.iabRef.hide();
-        this.iabDLRef = this.iab.create("https://www.google.com/", "_blank", "location=no");
+        this.iabDLRef = this.iab.create("https://www.google.com/", "_blank", "location=no,hidden=yes");
         
         //this.timeoutManagement.dateStartDownload = new Date();
         //this.timeoutManagement.downloaded = false;

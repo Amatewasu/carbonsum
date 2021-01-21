@@ -6,8 +6,8 @@ android {
         applicationId "me.delrieu.carbonsum"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 203
-        versionName "1.0.2"
+        versionCode 204
+        versionName "1.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

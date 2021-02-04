@@ -35,7 +35,7 @@ export class SettingsPage implements OnInit {
     console.log("current lang",  this.translateService.currentLang);
 
     let now = new Date();
-    this.todayUSFormat = now.getFullYear() +"-"+ (now.getMonth()+1) +"-"+ now.getDate();
+    this.todayUSFormat = now.getFullYear() +"-"+ this.minTwoDigits(now.getMonth()+1) +"-"+ this.minTwoDigits(now.getDate());
 
     this.synchronizeUntil = localStorage.synchronizeUntil || "2020-01-01";
 
@@ -80,5 +80,13 @@ export class SettingsPage implements OnInit {
 
     localStorage.objectiveCO2 = this.objectiveCO2;
     localStorage.objectiveYear = this.objectiveYear;
+  }
+
+  minTwoDigits(n : number){
+    let nStr = n.toString();
+    if (nStr.length == 1){
+      nStr = "0"+ nStr;
+    }
+    return nStr;
   }
 }

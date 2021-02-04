@@ -25,3 +25,10 @@ ion-item:last-child {
 ion-item:last-child {
     --inner-border-width: 0;
 }
+
+.offset-button {
+    margin: 16px;
+}
+.offset-button ion-icon {
+    margin-left: 10px;
+}

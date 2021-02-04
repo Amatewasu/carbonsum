@@ -89,7 +89,9 @@
         "butItsCurrentMonth": "It is normal because it is the current month report, which is not ended yet.",
         "consequenceOfMove": "d'équivalent CO2 émis en conséquence de vos déplacements.",
         "including": "including",
-        "relatedToYourMoves": "related to your trips by"
+        "relatedToYourMoves": "related to your trips by",
+
+        "offset": "Offset"
     },
 
     "add-move": {
@@ -194,5 +196,16 @@
         "weDoNotUseYourData": "CarbonSum uses the Google Maps history of position only to compute your carbon footprint. We do not store your data on a server.",
         "youCanStop": "You can unlink your Google account at anytime and no data will be stored.",
         "ignore": "Ignore"
+    },
+
+    "offset": {
+        "TITLE": "Offset",
+        "offset": "Offset",
+        "afforestation": "Afforestation",
+        "inFrance": "in France",
+        "lowCarbonLabelFrenchMinistery": "Low-carbon labeled by the French Ecology Minister",
+        "STOCK_explanation": "In order to provide this carbon offsetting service, we made a partnership with STOCK; a French startup devocated to carbon offsetting in France.",
+        "whatIsOffsetting_title": "What is a carbon offset?",
+        "whatIsOffsetting_explanation": "To offset is contribute to the funding of projects which capture CO2 emissions made elsewhere."
     }
 }

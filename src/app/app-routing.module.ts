@@ -26,6 +26,10 @@ const routes: Routes = [
   {
     path: 'help',
     loadChildren: () => import('./help/help.module').then( m => m.HelpPageModule)
+  },
+  {
+    path: 'offset',
+    loadChildren: () => import('./offset/offset.module').then( m => m.OffsetPageModule)
   }
 ];
 

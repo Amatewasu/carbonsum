@@ -39,6 +39,8 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "@sentry/angular": "^5.28.0",
     "@sentry/tracing": "^5.28.0",
+    "@stripe/stripe-js": "^1.11.0",
+    "@types/stripe-v3": "^3.1.23",
     "chart.js": "^2.9.3",
     "cordova-android": "^8.1.0",
     "cordova-plugin-app-version": "^0.1.9",
@@ -58,6 +60,7 @@
     "moment": "^2.27.0",
     "ng2-charts": "^2.4.0",
     "rxjs": "^6.6.2",
+    "stripe-angular": "^1.5.3",
     "tslib": "^1.13.0",
     "urlencode": "^1.1.0",
     "zone.js": "~0.10.3"

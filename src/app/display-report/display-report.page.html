@@ -101,6 +101,11 @@
     </ion-card-content>
   </ion-card>
 
+  <ion-button class="offset-button" color="tertiary" expand="block" href="/tabs/offset/{{ monthReport.sumCO2.toFixed(0) }}">
+    {{ 'display-report.offset' | translate }}
+    <ion-icon name="leaf-outline"></ion-icon>
+  </ion-button>
+
   <ion-card class="smallreport-card">
     <ion-card-content>
       <h1>{{sumCO2.toFixed(1)}} kg</h1>

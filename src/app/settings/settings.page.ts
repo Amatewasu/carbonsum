@@ -10,6 +10,8 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { EcologyToolsService } from '../ecology-tools.service';
 
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
@@ -29,7 +31,7 @@ export class SettingsPage implements OnInit {
 
   private currentYear : number = new Date().getFullYear();
 
-  constructor(changeDetectorRef: ChangeDetectorRef, private translateService: TranslateService, private Ecology: EcologyToolsService) {
+  constructor(changeDetectorRef: ChangeDetectorRef, private translateService: TranslateService, private Ecology: EcologyToolsService, private socialSharing: SocialSharing) {
     this.changeDetectorRef = changeDetectorRef;
     this.language = this.translateService.currentLang;
     console.log("current lang",  this.translateService.currentLang);
@@ -89,4 +91,25 @@ export class SettingsPage implements OnInit {
     }
     return nStr;
   }
+
+  reportABug(){
+    let data = JSON.stringify(localStorage);
+
+    const onSuccess = (result) => {
+      console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+      console.log("Shared to app: " + result.app); // On Android result.app since plugin version 5.4.0 this is no longer empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+    };
+    const onError = (msg) => {
+      console.error("Sharing failed with message: " + msg);
+    };
+
+    this.socialSharing.shareViaEmail(
+      'Hi Alexis,\nI found a bug in CarbonSum, I will explain to you what happened, maybe with a screenshot. I have also attached my data to this email.\n\nHave a great day!\n', // Message
+      'I found a bug', // Subject
+      ['alexis@getcarbonsum.app'], // to
+      [], // cc
+      [], // bcc
+      [data] // attachments
+    ).then(onSuccess).catch(onError);
+  };
 }

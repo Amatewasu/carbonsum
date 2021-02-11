@@ -23,11 +23,23 @@ export class OffsetPage implements OnInit {
 
   ngOnInit() {
     if (this.route.snapshot.paramMap.get('co2ToOffset')){
+      let MIN_OFFSET = 50.0;
+      let MAX_OFFSET = 2000.0;
+      let STEP_OFFSET = 50.0;
+
       this.co2ToOffset = parseFloat(this.route.snapshot.paramMap.get('co2ToOffset'));
 
-      if (this.co2ToOffset < 25){
-        this.co2ToOffset = 25.0;
+      if (this.co2ToOffset < MIN_OFFSET){
+        this.co2ToOffset = MIN_OFFSET;
+      } else if (this.co2ToOffset > MAX_OFFSET){
+        this.co2ToOffset = MAX_OFFSET;
       }
+      
+      if (this.co2ToOffset % STEP_OFFSET != 0){
+        let nbSteps = Math.ceil(this.co2ToOffset / STEP_OFFSET);
+        this.co2ToOffset = nbSteps * STEP_OFFSET;
+      }
+
     }
 
     this.loadStripe();

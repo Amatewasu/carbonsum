@@ -90,8 +90,9 @@
 
       <hr>
 
-      <ion-button size="small" expand="block" class="small-padding" target="_blank" href="mailto:alexis@getcarbonsum.app?subject=CarbonSum%20-%20Report%20a%20bug&body=Hi%20Alexis">
+      <ion-button size="small" expand="block" class="small-padding" (click)="reportABug()">
         {{ 'settings.reportABug' | translate }}
+        <ion-icon name="arrow-redo-outline" style="margin-left: 10px;"></ion-icon>
       </ion-button>
 
       <hr>

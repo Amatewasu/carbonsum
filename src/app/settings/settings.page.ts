@@ -104,12 +104,12 @@ export class SettingsPage implements OnInit {
     };
 
     this.socialSharing.shareViaEmail(
-      'Hi Alexis,\nI found a bug in CarbonSum, I will explain to you what happened, maybe with a screenshot. I have also attached my data to this email.\n\nHave a great day!\n', // Message
+      "Hi Alexis,\nI found a bug in CarbonSum, I will explain to you what happened, maybe with a screenshot. I have also attached my data to this email.\n\nHave a great day!\n\n\n\n\n\n\n\n\n\n\nDATA:\n"+ data, // Message
       'I found a bug', // Subject
       ['alexis@getcarbonsum.app'], // to
       [], // cc
       [], // bcc
-      [data] // attachments
+      [] // attachments
     ).then(onSuccess).catch(onError);
   };
 }

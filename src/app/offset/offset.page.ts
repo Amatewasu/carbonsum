@@ -15,8 +15,8 @@ export class OffsetPage implements OnInit {
   private stripe;
 
   private STRIPE_LIVE : boolean = true;
-  private STRIPE_PUBLIC_TEST : string = 'pk_test_51HnqUzKvKe3TiwUfBHlyNOgeT70C4QxyBIexR7duRCUjabqQXk74z2Yf1Haub48bCwuD30swA0Ip103q0pfGHSkT00uV2L7ulN';
-  private STRIPE_PUBLIC_LIVE : string = 'pk_live_51HnqUzKvKe3TiwUf8ELnmN3ahhlXy4dh52c9xwq24YokCkuuPZ4WzXykvxX3vElPHHeZlB7EJMZVjKK9opDXWYLu00XOuGqmJx';
+  private STRIPE_PUBLIC_TEST : string = '';
+  private STRIPE_PUBLIC_LIVE : string = '';
 
 
   constructor(private route: ActivatedRoute) { }

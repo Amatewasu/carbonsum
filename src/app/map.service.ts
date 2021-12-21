@@ -30,7 +30,7 @@ export interface Feature {
 })
 export class MapService {
 
-  MAPBOX_TOKEN = 'pk.eyJ1IjoiYW1hdGV3YXN1IiwiYSI6ImNrYXYzcnl6cDB4NGUycXB0OW1rNXMxN2cifQ.VYH28LCw2EJWdkmyp56k4Q';
+  MAPBOX_TOKEN = '';
 
 
   constructor(private http: HttpClient) { }
